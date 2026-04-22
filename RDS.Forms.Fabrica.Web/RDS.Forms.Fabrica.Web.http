@@ -1,0 +1,6 @@
+@RDS.Forms.Fabrica.Web_HostAddress = http://localhost:5186
+
+GET {{RDS.Forms.Fabrica.Web_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
