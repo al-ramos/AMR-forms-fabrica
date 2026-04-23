@@ -3,7 +3,12 @@ using RDS.Forms.Fabrica.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    // Esta linha avisa o .NET: "Não exija os objetos de navegação no JSON!"
+    options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
+});
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -23,7 +28,22 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.ReferenceHandler =
             System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles);
 
+// Antes do builder.Build()
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("DevPolicy", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173") // porta do Vite
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
+
 var app = builder.Build();
+
+// Depois do app = builder.Build(), antes do app.MapControllers()
+app.UseCors("DevPolicy");
 
 if (app.Environment.IsDevelopment())
 {

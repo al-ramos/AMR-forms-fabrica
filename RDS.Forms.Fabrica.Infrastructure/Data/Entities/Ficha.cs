@@ -13,10 +13,6 @@ namespace RDS.Forms.Fabrica.Infrastructure.Data.Entities;
 [Index("CdTipoOperacao", Name = "IX_FICHA_TIPO_OPERACAO")]
 public partial class Ficha
 {
-    [Key]
-    [Column("CD_FICHA")]
-    public int CdFicha { get; set; }
-
     [Column("CD_FILIAL")]
     public int CdFilial { get; set; }
 
@@ -75,6 +71,10 @@ public partial class Ficha
     [StringLength(10)]
     [Unicode(false)]
     public string? CdTipoDoctoJde { get; set; }
+
+    [Key]
+    [Column("CD_FICHA")]
+    public int CdFicha { get; set; }
 
     [ForeignKey("CdAddressNumberTra")]
     [InverseProperty("Fichas")]

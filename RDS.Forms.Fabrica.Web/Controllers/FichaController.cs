@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RDS.Forms.Fabrica.Infrastructure.Data;
+using RDS.Forms.Fabrica.Infrastructure.Data.Entities;
 
 namespace RDS.Forms.Fabrica.Web.Controllers;
 
@@ -56,4 +57,34 @@ public class FichaController : ControllerBase
 
         return Ok(fichas);
     }
+
+    // POST api/ficha
+    [HttpPost]
+    public async Task<IActionResult> Create([FromBody] Ficha novaFicha)
+    {
+        if (novaFicha == null)
+            return BadRequest("Os dados da ficha não podem ser nulos.");
+
+        try
+        {
+            // Adiciona a nova ficha ao contexto do Entity Framework
+            _context.Fichas.Add(novaFicha);
+
+            // Salva as alterações no banco de dados
+            await _context.SaveChangesAsync();
+
+            // Retorna o status 201 (Created) e a rota para buscar a ficha criada
+            return CreatedAtAction(nameof(GetById), new { id = novaFicha.CdFicha }, novaFicha);
+        }
+        catch (Exception ex)
+        {
+            // Retorna 500 caso dê algum erro de banco (ex: chave estrangeira inválida)
+            //return StatusCode(500, $"Erro interno ao criar ficha: {ex.Message}");            
+            // Pega a mensagem real do banco de dados (InnerException) se ela existir
+            var mensagemErro = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+            return StatusCode(500, $"Erro interno ao criar ficha: {mensagemErro}");
+        }
+    
+    }
+
 }
