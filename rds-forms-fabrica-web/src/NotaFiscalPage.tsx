@@ -39,11 +39,24 @@ function AmbienteBadge({ ambiente }: { ambiente: string | null }) {
 }
 
 function DetalheNF({ nf, onClose }: { nf: NotaFiscalAPI; onClose: () => void }) {
+    const [itens, setItens] = useState<any[]>([]);
+    const [loadingItens, setLoadingItens] = useState(true);
+
+    useEffect(() => {
+        setLoadingItens(true);
+        fetch(`${API}/api/NotaFiscal/${nf.cdNotaFiscal}/${nf.cdSerNotaFiscal}/itens`)
+            .then(r => r.json())
+            .then(setItens)
+            .catch(() => setItens([]))
+            .finally(() => setLoadingItens(false));
+    }, [nf.cdNotaFiscal, nf.cdSerNotaFiscal]);
+
     return (
         <div style={{
             marginTop: 20, background: "#111827",
             border: "1px solid #3B82F640", borderRadius: 8, padding: 24,
         }}>
+            {/* Header */}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
                 <div style={{ fontSize: 15, fontWeight: 800, color: "#F9FAFB" }}>
                     NF <span style={{ color: "#3B82F6", fontFamily: "'DM Mono', monospace" }}>
@@ -53,14 +66,15 @@ function DetalheNF({ nf, onClose }: { nf: NotaFiscalAPI; onClose: () => void }) 
                 <button onClick={onClose} style={{ background: "none", border: "none", color: "#6B7280", cursor: "pointer", fontSize: 18 }}>✕</button>
             </div>
 
+            {/* Dados da NF */}
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16, marginBottom: 20 }}>
                 {([
                     ["Filial", nf.noFilial ?? `Filial ${nf.cdFilial}`],
                     ["Cliente", nf.noCliente ?? "—"],
-                    ["CNPJ Cliente", nf.cdCnpjCliente ?? "—"],
+                    ["CNPJ", nf.cdCnpjCliente ?? "—"],
                     ["Data Emissão", nf.dtEmissaoNf ? new Date(nf.dtEmissaoNf).toLocaleDateString("pt-BR") : "—"],
                     ["Ficha Vinculada", nf.cdFicha ? `#${String(nf.cdFicha).padStart(4, "0")}` : "—"],
-                    ["Valor", nf.vlTransmissao != null ? `R$ ${nf.vlTransmissao.toFixed(2)}` : "—"],
+                    ["Valor Total", nf.vlTransmissao != null ? `R$ ${nf.vlTransmissao.toFixed(2)}` : "—"],
                 ] as [string, string][]).map(([k, v]) => (
                     <div key={k}>
                         <div style={{ fontSize: 10, color: "#6B7280", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>{k}</div>
@@ -69,31 +83,95 @@ function DetalheNF({ nf, onClose }: { nf: NotaFiscalAPI; onClose: () => void }) 
                 ))}
             </div>
 
+            {/* Chave e Protocolo */}
             {nf.cdChaveNfe && (
-                <div style={{ background: "#0D1117", borderRadius: 6, padding: "10px 14px", border: "1px solid #1F2937" }}>
-                    <div style={{ fontSize: 10, color: "#6B7280", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>
-                        Chave NF-e
-                    </div>
-                    <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 11, color: "#3B82F6", wordBreak: "break-all" }}>
-                        {nf.cdChaveNfe}
-                    </div>
+                <div style={{ background: "#0D1117", borderRadius: 6, padding: "10px 14px", border: "1px solid #1F2937", marginBottom: 10 }}>
+                    <div style={{ fontSize: 10, color: "#6B7280", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>Chave NF-e</div>
+                    <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 11, color: "#3B82F6", wordBreak: "break-all" }}>{nf.cdChaveNfe}</div>
+                </div>
+            )}
+            {nf.cdProtocolo && (
+                <div style={{ background: "#0D1117", borderRadius: 6, padding: "10px 14px", border: "1px solid #1F2937", marginBottom: 20 }}>
+                    <div style={{ fontSize: 10, color: "#6B7280", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>Protocolo</div>
+                    <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 11, color: "#D1D5DB" }}>{nf.cdProtocolo}</div>
                 </div>
             )}
 
-            {nf.cdProtocolo && (
-                <div style={{ background: "#0D1117", borderRadius: 6, padding: "10px 14px", border: "1px solid #1F2937", marginTop: 10 }}>
-                    <div style={{ fontSize: 10, color: "#6B7280", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>
-                        Protocolo
-                    </div>
-                    <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 11, color: "#D1D5DB" }}>
-                        {nf.cdProtocolo}
-                    </div>
+            {/* Itens da NF */}
+            <div>
+                <div style={{ fontSize: 11, color: "#6B7280", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 12 }}>
+                    Itens da Nota Fiscal
                 </div>
-            )}
+
+                {loadingItens ? (
+                    <div style={{ color: "#6B7280", fontSize: 13, padding: "12px 0" }}>Carregando itens...</div>
+                ) : itens.length === 0 ? (
+                    <div style={{ background: "#0D1117", borderRadius: 6, padding: "16px", border: "1px solid #1F2937", color: "#4B5563", fontSize: 13, textAlign: "center" }}>
+                        Nenhum item cadastrado para esta nota fiscal.
+                    </div>
+                ) : (
+                    <div style={{ background: "#0D1117", borderRadius: 6, border: "1px solid #1F2937", overflow: "hidden" }}>
+                        <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                            <thead>
+                                <tr>
+                                    {["Produto", "Descrição", "Qtd", "Un.", "Preço Unit.", "Total", "IPI", "ICMS CST"].map(h => (
+                                        <th key={h} style={{
+                                            padding: "8px 12px", fontSize: 10, fontWeight: 700,
+                                            color: "#6B7280", textTransform: "uppercase", letterSpacing: "0.08em",
+                                            textAlign: "left", borderBottom: "1px solid #1F2937", background: "#060B10",
+                                        }}>{h}</th>
+                                    ))}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {itens.map((item, i) => (
+                                    <tr key={i} style={{ borderBottom: "1px solid #1F2937" }}>
+                                        <td style={{ padding: "10px 12px", fontFamily: "'DM Mono', monospace", fontSize: 12, color: "#E85D04" }}>
+                                            {item.cdProduto ?? "—"}
+                                        </td>
+                                        <td style={{ padding: "10px 12px", fontSize: 12, color: "#D1D5DB" }}>
+                                            {item.noProduto ?? "—"}
+                                        </td>
+                                        <td style={{ padding: "10px 12px", fontFamily: "'DM Mono', monospace", fontSize: 12, color: "#D1D5DB" }}>
+                                            {item.qtProduto?.toFixed(3) ?? "—"}
+                                        </td>
+                                        <td style={{ padding: "10px 12px", fontSize: 12, color: "#9CA3AF" }}>
+                                            {item.cdUnidadeMedida ?? "—"}
+                                        </td>
+                                        <td style={{ padding: "10px 12px", fontFamily: "'DM Mono', monospace", fontSize: 12, color: "#10B981" }}>
+                                            {item.vlPrecoUnitario != null ? `R$ ${item.vlPrecoUnitario.toFixed(2)}` : "—"}
+                                        </td>
+                                        <td style={{ padding: "10px 12px", fontFamily: "'DM Mono', monospace", fontSize: 12, color: "#10B981", fontWeight: 700 }}>
+                                            {item.vlTotal != null ? `R$ ${item.vlTotal.toFixed(2)}` : "—"}
+                                        </td>
+                                        <td style={{ padding: "10px 12px", fontFamily: "'DM Mono', monospace", fontSize: 12, color: "#9CA3AF" }}>
+                                            {item.vlIpi != null ? `R$ ${item.vlIpi.toFixed(2)}` : "—"}
+                                        </td>
+                                        <td style={{ padding: "10px 12px", fontSize: 12, color: "#9CA3AF" }}>
+                                            {item.cdIcmsCst ?? "—"}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                            {/* Totalizador */}
+                            <tfoot>
+                                <tr style={{ borderTop: "2px solid #374151" }}>
+                                    <td colSpan={5} style={{ padding: "10px 12px", fontSize: 12, color: "#6B7280", fontWeight: 700 }}>
+                                        TOTAL ({itens.length} {itens.length === 1 ? "item" : "itens"})
+                                    </td>
+                                    <td style={{ padding: "10px 12px", fontFamily: "'DM Mono', monospace", fontSize: 13, color: "#10B981", fontWeight: 800 }}>
+                                        R$ {itens.reduce((acc, i) => acc + (i.vlTotal ?? 0), 0).toFixed(2)}
+                                    </td>
+                                    <td colSpan={2} />
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                )}
+            </div>
         </div>
     );
 }
-
 export default function NotaFiscalPage() {
     const [nfs, setNfs] = useState<NotaFiscalAPI[]>([]);
     const [loading, setLoading] = useState(true);
