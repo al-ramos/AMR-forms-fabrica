@@ -1,57 +1,64 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using RDS.Forms.Fabrica.Infrastructure.Data;
-using RDS.Forms.Fabrica.Infrastructure.Data.Entities;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using RDS.Forms.Fabrica.Application.Features.Veiculos.Commands;
+using RDS.Forms.Fabrica.Domain.Interfaces;
 
 namespace RDS.Forms.Fabrica.Web.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class VeiculoController : ControllerBase
+public class VeiculoController(IVeiculoRepository repo, IMediator mediator) : ControllerBase
 {
-    private readonly RdsFormasFabricaDbContext _context;
-
-    public VeiculoController(RdsFormasFabricaDbContext context)
-        => _context = context;
-
-    // GET api/veiculo/filial/1
-    [HttpGet("filial/{cdFilial}")]
-    public async Task<IActionResult> GetByFilial(int cdFilial)
-    {
-        var veiculos = await _context.Veiculos
-            .Where(v => v.CdFilial == cdFilial)
-            .Select(v => new { v.CdPlacaVeiculo, v.CdFilial })
-            .ToListAsync();
-
-        return Ok(veiculos);
-    }
-
     // GET api/veiculo
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var veiculos = await _context.Veiculos
-            .Select(v => new { v.CdPlacaVeiculo, v.CdFilial })
-            .ToListAsync();
+        var veiculos = await repo.ListarTodasAsync();
+        return Ok(veiculos.Select(v => new
+        {
+            v.Placa,
+            v.CodigoFilial,
+            v.UfVeiculo,
+            v.CodigoRntc,
+        }));
+    }
 
-        return Ok(veiculos);
+    // GET api/veiculo/filial/1
+    [HttpGet("filial/{codigoFilial}")]
+    public async Task<IActionResult> GetByFilial(int codigoFilial)
+    {
+        var veiculos = await repo.ListarPorFilialAsync(codigoFilial);
+        return Ok(veiculos.Select(v => new
+        {
+            v.Placa,
+            v.CodigoFilial,
+            v.UfVeiculo,
+            v.CodigoRntc,
+        }));
+    }
+
+    // GET api/veiculo/ABC-1234
+    [HttpGet("{placa}")]
+    public async Task<IActionResult> GetByPlaca(string placa)
+    {
+        var veiculo = await repo.ObterPorPlacaAsync(placa);
+        if (veiculo is null) return NotFound();
+        return Ok(new
+        {
+            veiculo.Placa,
+            veiculo.CodigoFilial,
+            veiculo.UfVeiculo,
+            veiculo.CodigoRntc,
+        });
     }
 
     // POST api/veiculo
     [HttpPost]
-    public async Task<IActionResult> Post([FromBody] NovoVeiculoDto dto)
+    public async Task<IActionResult> Cadastrar(
+        [FromBody] CadastrarVeiculoCommand command,
+        CancellationToken ct)
     {
-        var veiculo = new Veiculo
-        {
-            CdPlacaVeiculo = dto.CdPlacaVeiculo.ToUpper().Trim(),
-            CdFilial = dto.CdFilial
-        };
-
-        _context.Veiculos.Add(veiculo);
-        await _context.SaveChangesAsync();
-
-        return Ok(veiculo);
+        var placa = await mediator.Send(command, ct);
+        return CreatedAtAction(nameof(GetAll), new { }, new { placa });
     }
-
-    public record NovoVeiculoDto(string CdPlacaVeiculo, int CdFilial);
 }

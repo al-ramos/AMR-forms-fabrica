@@ -22,4 +22,11 @@ public class Veiculo
         UfVeiculo = ufVeiculo;
         CodigoRntc = codigoRntc;
     }
+
+    public void Atualizar(int codigoFilial, string? ufVeiculo, string? codigoRntc)
+    {
+        CodigoFilial = codigoFilial;
+        UfVeiculo = ufVeiculo;
+        CodigoRntc = codigoRntc;
+    }
 }

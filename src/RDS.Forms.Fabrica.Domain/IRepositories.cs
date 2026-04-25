@@ -14,7 +14,7 @@ public interface IFichaRepository
 public interface IFilialRepository
 {
     Task<Filial?> ObterPorIdAsync(int id);
-    Task<IEnumerable<Filial>> ListarTodasAsync();
+    Task<IEnumerable<Filial>> ListarTodosAsync();
 }
 
 public interface ITipoOperacaoRepository
@@ -56,8 +56,10 @@ public interface INotaFiscalDetalheRepository
 public interface IVeiculoRepository
 {
     Task<Veiculo?> ObterPorPlacaAsync(string placa);
-    Task<IEnumerable<Veiculo>> ListarTodasAsync();
+    Task<IEnumerable<Veiculo>> ListarTodosAsync();
     Task<IEnumerable<Veiculo>> ListarPorFilialAsync(int codigoFilial);
+    Task AdicionarAsync(Veiculo veiculo);
+    Task AtualizarAsync(Veiculo veiculo);
 }
 
 public interface IFichaBalancaRepository

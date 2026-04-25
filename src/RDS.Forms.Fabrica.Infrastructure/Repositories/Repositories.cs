@@ -40,7 +40,7 @@ public class FilialRepository(RdsDbContext context) : IFilialRepository
     public async Task<Filial?> ObterPorIdAsync(int id)
         => await context.Filiais.FirstOrDefaultAsync(f => f.Codigo == id);
 
-    public async Task<IEnumerable<Filial>> ListarTodasAsync()
+    public async Task<IEnumerable<Filial>> ListarTodosAsync()
         => await context.Filiais.OrderBy(f => f.Nome).ToListAsync();
 }
 
@@ -134,7 +134,7 @@ public class VeiculoRepository(RdsDbContext context) : IVeiculoRepository
     public async Task<Veiculo?> ObterPorPlacaAsync(string placa)
         => await context.Veiculos.FirstOrDefaultAsync(v => v.Placa == placa);
 
-    public async Task<IEnumerable<Veiculo>> ListarTodasAsync()
+    public async Task<IEnumerable<Veiculo>> ListarTodosAsync()
         => await context.Veiculos
             .OrderBy(v => v.Placa)
             .ToListAsync();
@@ -144,6 +144,15 @@ public class VeiculoRepository(RdsDbContext context) : IVeiculoRepository
             .Where(v => v.CodigoFilial == codigoFilial)
             .OrderBy(v => v.Placa)
             .ToListAsync();
+    
+    public async Task AdicionarAsync(Veiculo veiculo)
+        => await context.Veiculos.AddAsync(veiculo);
+
+    public Task AtualizarAsync(Veiculo veiculo)
+    {
+        context.Veiculos.Update(veiculo);
+        return Task.CompletedTask;
+    }
 }
 
 public class FichaBalancaRepository(RdsDbContext context) : IFichaBalancaRepository
@@ -203,4 +212,9 @@ public class NotaFiscalDetalheRepository(RdsDbContext context) : INotaFiscalDeta
         => await context.NotasFiscaisDetalhe
             .Where(d => d.NumeroNotaFiscal == numeroNf && d.SerieNotaFiscal == serie)
             .ToListAsync();
+
+
+
 }
+
+

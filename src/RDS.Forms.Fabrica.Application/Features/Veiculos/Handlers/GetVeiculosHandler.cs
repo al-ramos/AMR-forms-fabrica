@@ -9,7 +9,7 @@ public class GetVeiculosHandler(IVeiculoRepository repo)
     : IRequestHandler<GetVeiculosQuery, IEnumerable<Veiculo>>
 {
     public async Task<IEnumerable<Veiculo>> Handle(GetVeiculosQuery request, CancellationToken ct)
-        => await repo.ListarTodasAsync();
+        => await repo.ListarTodosAsync();
 }
 
 public class GetVeiculosPorFilialHandler(IVeiculoRepository repo)

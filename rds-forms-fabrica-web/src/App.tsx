@@ -1,5 +1,6 @@
 import { useState, useCallback, useMemo } from "react";
 import NotaFiscalPage from "./NotaFiscalPage";
+import VeiculosPage from "./VeiculosPage";
 import { type Ficha, icons } from "./types";
 import { useFichas } from "./useFichas";
 import { Sidebar, Header, KPICard, PlaceholderPage, Spinner, ErrorBox, Icon } from "./ui";
@@ -81,7 +82,7 @@ export default function App() {
             : <FichasPage fichas={fichas} loading={loading} error={error} reload={reload} onNova={() => setNovaFichaAberta(true)} />,
         nf: <NotaFiscalPage />,
         pedidos: <PlaceholderPage label="Pedidos" />,
-        veiculos: <PlaceholderPage label="Veículos" />,
+        veiculos: <VeiculosPage />,
         balanca: <PlaceholderPage label="Balanças" />,
         config: <PlaceholderPage label="Configurações" />,
     }), [fichas, loading, error, reload, novaFichaAberta, handleNovaFichaSuccess]);
