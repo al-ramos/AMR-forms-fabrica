@@ -44,7 +44,7 @@ function DetalheNF({ nf, onClose }: { nf: NotaFiscalAPI; onClose: () => void }) 
 
     useEffect(() => {
         setLoadingItens(true);
-        fetch(`${API}/api/NotaFiscal/${nf.cdNotaFiscal}/${nf.cdSerNotaFiscal}/itens`)
+        fetch(`${API}/api/NotaFiscal/${nf.numero}/${nf.serieNotaFiscal}/itens`)
             .then(r => r.json())
             .then(setItens)
             .catch(() => setItens([]))
@@ -60,7 +60,7 @@ function DetalheNF({ nf, onClose }: { nf: NotaFiscalAPI; onClose: () => void }) 
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
                 <div style={{ fontSize: 15, fontWeight: 800, color: "#F9FAFB" }}>
                     NF <span style={{ color: "#3B82F6", fontFamily: "'DM Mono', monospace" }}>
-                        {nf.cdNotaFiscal} / {nf.cdSerNotaFiscal}
+                        {nf.numero} / {nf.serieNotaFiscal}
                     </span>
                 </div>
                 <button onClick={onClose} style={{ background: "none", border: "none", color: "#6B7280", cursor: "pointer", fontSize: 18 }}>✕</button>
@@ -69,12 +69,12 @@ function DetalheNF({ nf, onClose }: { nf: NotaFiscalAPI; onClose: () => void }) 
             {/* Dados da NF */}
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16, marginBottom: 20 }}>
                 {([
-                    ["Filial", nf.noFilial ?? `Filial ${nf.cdFilial}`],
-                    ["Cliente", nf.noCliente ?? "—"],
-                    ["CNPJ", nf.cdCnpjCliente ?? "—"],
-                    ["Data Emissão", nf.dtEmissaoNf ? new Date(nf.dtEmissaoNf).toLocaleDateString("pt-BR") : "—"],
-                    ["Ficha Vinculada", nf.cdFicha ? `#${String(nf.cdFicha).padStart(4, "0")}` : "—"],
-                    ["Valor Total", nf.vlTransmissao != null ? `R$ ${nf.vlTransmissao.toFixed(2)}` : "—"],
+                    ["Filial", nf.nomeFilial ?? `Filial ${nf.codigoFilial}`],
+                    ["Cliente", nf.nomeCliente ?? "—"],
+                    ["CNPJ", nf.cnpjCliente ?? "—"],
+                    ["Data Emissão", nf.dataEmissao ? new Date(nf.dataEmissao).toLocaleDateString("pt-BR") : "—"],
+                    ["Ficha Vinculada", nf.codigoFicha ? `#${String(nf.codigoFicha).padStart(4, "0")}` : "—"],
+                    ["Valor Total", nf.valorTransmissao != null ? `R$ ${nf.valorTransmissao.toFixed(2)}` : "—"],
                 ] as [string, string][]).map(([k, v]) => (
                     <div key={k}>
                         <div style={{ fontSize: 10, color: "#6B7280", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>{k}</div>
@@ -84,16 +84,16 @@ function DetalheNF({ nf, onClose }: { nf: NotaFiscalAPI; onClose: () => void }) 
             </div>
 
             {/* Chave e Protocolo */}
-            {nf.cdChaveNfe && (
+            {nf.chaveNfe && (
                 <div style={{ background: "#0D1117", borderRadius: 6, padding: "10px 14px", border: "1px solid #1F2937", marginBottom: 10 }}>
                     <div style={{ fontSize: 10, color: "#6B7280", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>Chave NF-e</div>
-                    <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 11, color: "#3B82F6", wordBreak: "break-all" }}>{nf.cdChaveNfe}</div>
+                    <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 11, color: "#3B82F6", wordBreak: "break-all" }}>{nf.chaveNfe}</div>
                 </div>
             )}
-            {nf.cdProtocolo && (
+            {nf.protocolo && (
                 <div style={{ background: "#0D1117", borderRadius: 6, padding: "10px 14px", border: "1px solid #1F2937", marginBottom: 20 }}>
                     <div style={{ fontSize: 10, color: "#6B7280", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>Protocolo</div>
-                    <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 11, color: "#D1D5DB" }}>{nf.cdProtocolo}</div>
+                    <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 11, color: "#D1D5DB" }}>{nf.protocolo}</div>
                 </div>
             )}
 
@@ -127,28 +127,28 @@ function DetalheNF({ nf, onClose }: { nf: NotaFiscalAPI; onClose: () => void }) 
                                 {itens.map((item, i) => (
                                     <tr key={i} style={{ borderBottom: "1px solid #1F2937" }}>
                                         <td style={{ padding: "10px 12px", fontFamily: "'DM Mono', monospace", fontSize: 12, color: "#E85D04" }}>
-                                            {item.cdProduto ?? "—"}
+                                            {item.codigoProduto ?? "—"}
                                         </td>
                                         <td style={{ padding: "10px 12px", fontSize: 12, color: "#D1D5DB" }}>
-                                            {item.noProduto ?? "—"}
+                                            {item.codigoEan ?? "—"}
                                         </td>
                                         <td style={{ padding: "10px 12px", fontFamily: "'DM Mono', monospace", fontSize: 12, color: "#D1D5DB" }}>
-                                            {item.qtProduto?.toFixed(3) ?? "—"}
+                                            {item.quantidade != null ? Number(item.quantidade).toFixed(3) : "—"}
                                         </td>
                                         <td style={{ padding: "10px 12px", fontSize: 12, color: "#9CA3AF" }}>
-                                            {item.cdUnidadeMedida ?? "—"}
+                                            {item.unidadeMedidaComercial ?? item.unidadeMedida ?? "—"}
                                         </td>
                                         <td style={{ padding: "10px 12px", fontFamily: "'DM Mono', monospace", fontSize: 12, color: "#10B981" }}>
-                                            {item.vlPrecoUnitario != null ? `R$ ${item.vlPrecoUnitario.toFixed(2)}` : "—"}
+                                            {item.precoUnitario != null ? `R$ ${Number(item.precoUnitario).toFixed(2)}` : "—"}
                                         </td>
                                         <td style={{ padding: "10px 12px", fontFamily: "'DM Mono', monospace", fontSize: 12, color: "#10B981", fontWeight: 700 }}>
-                                            {item.vlTotal != null ? `R$ ${item.vlTotal.toFixed(2)}` : "—"}
+                                            {item.valorTotal != null ? `R$ ${Number(item.valorTotal).toFixed(2)}` : "—"}
                                         </td>
                                         <td style={{ padding: "10px 12px", fontFamily: "'DM Mono', monospace", fontSize: 12, color: "#9CA3AF" }}>
-                                            {item.vlIpi != null ? `R$ ${item.vlIpi.toFixed(2)}` : "—"}
+                                            {item.valorIpi != null ? `R$ ${Number(item.valorIpi).toFixed(2)}` : "—"}
                                         </td>
                                         <td style={{ padding: "10px 12px", fontSize: 12, color: "#9CA3AF" }}>
-                                            {item.cdIcmsCst ?? "—"}
+                                            {item.codigoCfo ?? "—"}
                                         </td>
                                     </tr>
                                 ))}
@@ -160,7 +160,7 @@ function DetalheNF({ nf, onClose }: { nf: NotaFiscalAPI; onClose: () => void }) 
                                         TOTAL ({itens.length} {itens.length === 1 ? "item" : "itens"})
                                     </td>
                                     <td style={{ padding: "10px 12px", fontFamily: "'DM Mono', monospace", fontSize: 13, color: "#10B981", fontWeight: 800 }}>
-                                        R$ {itens.reduce((acc, i) => acc + (i.vlTotal ?? 0), 0).toFixed(2)}
+                                        R$ {itens.reduce((acc, i) => acc + Number(i.valorTotal ?? 0), 0).toFixed(2)}
                                     </td>
                                     <td colSpan={2} />
                                 </tr>
@@ -198,23 +198,23 @@ export default function NotaFiscalPage() {
 
     const filtradas = useMemo(() => nfs.filter(n => {
         const matchSearch =
-            String(n.cdNotaFiscal).includes(search) ||
-            (n.noCliente ?? "").toLowerCase().includes(search.toLowerCase()) ||
-            (n.noFilial ?? "").toLowerCase().includes(search.toLowerCase()) ||
-            (n.cdChaveNfe ?? "").includes(search);
+            String(n.numero).includes(search) ||
+            (n.nomeCliente ?? "").toLowerCase().includes(search.toLowerCase()) ||
+            (n.nomeFilial ?? "").toLowerCase().includes(search.toLowerCase()) ||
+            (n.chaveNfe ?? "").includes(search);
 
         const matchStatus =
             filtroStatus === "todos" ? true :
-                filtroStatus === "cancelada" ? n.icCancelado === 1 :
-                    n.icCancelado !== 1;
+                filtroStatus === "cancelada" ? n.cancelado === 1 :
+                    n.cancelado !== 1;
 
         return matchSearch && matchStatus;
     }), [nfs, search, filtroStatus]);
 
     const totais = useMemo(() => ({
         total: nfs.length,
-        ativas: nfs.filter(n => n.icCancelado !== 1).length,
-        canceladas: nfs.filter(n => n.icCancelado === 1).length,
+        ativas: nfs.filter(n => n.cancelado !== 1).length,
+        canceladas: nfs.filter(n => n.cancelado === 1).length,
     }), [nfs]);
 
     return (
@@ -294,41 +294,41 @@ export default function NotaFiscalPage() {
                             </thead>
                             <tbody>
                                 {filtradas.map(n => (
-                                    <tr key={`${n.cdNotaFiscal}-${n.cdSerNotaFiscal}`}
-                                        onClick={() => setSelected(s => s?.cdNotaFiscal === n.cdNotaFiscal ? null : n)}
+                                    <tr key={`${n.numero}-${n.serieNotaFiscal}`}
+                                        onClick={() => setSelected(s => s?.numero === n.numero ? null : n)}
                                         style={{
                                             cursor: "pointer",
-                                            background: selected?.cdNotaFiscal === n.cdNotaFiscal ? "rgba(59,130,246,0.08)" : "transparent",
+                                            background: selected?.numero === n.numero ? "rgba(59,130,246,0.08)" : "transparent",
                                             borderBottom: "1px solid #1F2937", transition: "background 0.15s",
                                         }}
-                                        onMouseEnter={e => { if (selected?.cdNotaFiscal !== n.cdNotaFiscal) e.currentTarget.style.background = "rgba(255,255,255,0.03)"; }}
-                                        onMouseLeave={e => { if (selected?.cdNotaFiscal !== n.cdNotaFiscal) e.currentTarget.style.background = "transparent"; }}
+                                        onMouseEnter={e => { if (selected?.numero !== n.numero) e.currentTarget.style.background = "rgba(255,255,255,0.03)"; }}
+                                        onMouseLeave={e => { if (selected?.numero !== n.numero) e.currentTarget.style.background = "transparent"; }}
                                     >
                                         <td style={tdStyle}>
                                             <span style={{ fontFamily: "'DM Mono', monospace", color: "#3B82F6", fontWeight: 700 }}>
-                                                {n.cdNotaFiscal}
+                                                {n.numero}
                                             </span>
-                                            <span style={{ color: "#4B5563", fontSize: 11, marginLeft: 4 }}>/ {n.cdSerNotaFiscal}</span>
+                                            <span style={{ color: "#4B5563", fontSize: 11, marginLeft: 4 }}>/ {n.serieNotaFiscal}</span>
                                         </td>
-                                        <td style={tdStyle}>{n.noFilial ?? `Filial ${n.cdFilial}`}</td>
-                                        <td style={tdStyle}>{n.noCliente ?? "—"}</td>
+                                        <td style={tdStyle}>{n.nomeFilial ?? `Filial ${n.codigoFilial}`}</td>
+                                        <td style={tdStyle}>{n.nomeCliente ?? "—"}</td>
                                         <td style={tdStyle}>
-                                            {n.dtEmissaoNf ? new Date(n.dtEmissaoNf).toLocaleDateString("pt-BR") : "—"}
+                                            {n.dataEmissao ? new Date(n.dataEmissao).toLocaleDateString("pt-BR") : "—"}
                                         </td>
                                         <td style={tdStyle}>
-                                            {n.cdFicha
-                                                ? <span style={{ fontFamily: "'DM Mono', monospace", color: "#E85D04", fontWeight: 700 }}>#{String(n.cdFicha).padStart(4, "0")}</span>
+                                            {n.codigoFicha
+                                                ? <span style={{ fontFamily: "'DM Mono', monospace", color: "#E85D04", fontWeight: 700 }}>#{String(n.codigoFicha).padStart(4, "0")}</span>
                                                 : <span style={{ color: "#4B5563" }}>—</span>
                                             }
                                         </td>
                                         <td style={tdStyle}>
-                                            {n.vlTransmissao != null
-                                                ? <span style={{ fontFamily: "'DM Mono', monospace", color: "#10B981" }}>R$ {n.vlTransmissao.toFixed(2)}</span>
+                                            {n.valorTransmissao != null
+                                                ? <span style={{ fontFamily: "'DM Mono', monospace", color: "#10B981" }}>R$ {n.valorTransmissao.toFixed(2)}</span>
                                                 : <span style={{ color: "#4B5563" }}>—</span>
                                             }
                                         </td>
-                                        <td style={tdStyle}><AmbienteBadge ambiente={n.cdAmbiente} /></td>
-                                        <td style={tdStyle}><StatusNF cancelado={n.icCancelado} /></td>
+                                        <td style={tdStyle}><AmbienteBadge ambiente={n.ambiente ?? null} /></td>
+                                        <td style={tdStyle}><StatusNF cancelado={n.cancelado ?? null} /></td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -340,8 +340,11 @@ export default function NotaFiscalPage() {
                         )}
                     </div>
                     {selected && <DetalheNF nf={selected} onClose={() => setSelected(null)} />}
+
                 </>
+
             )}
+
         </div>
     );
 }

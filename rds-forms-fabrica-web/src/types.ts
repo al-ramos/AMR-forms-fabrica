@@ -5,15 +5,13 @@ export const PASSO_FINAL = 4;
 export const passos = ["Entrada", "Pesagem", "Carregamento", "Saída"] as const;
 
 export interface FichaAPI {
-    cdFicha: number;
-    cdFilial: number;
-    noFilial: string;
-    dtFicha: string;
-    cdPlacaVeiculo: string;
-    cdTipoOperacao: number;
-    cdPassoAtual: number;
-    tipoOperacaos?: { noTipoOperacao?: string }[];
-    cdPassoAtualNavigation?: { noPasso?: string };
+    codigo: number;
+    codigoFilial: number;
+    dataFicha?: string | null;
+    placaVeiculo?: string | null;
+    codigoTipoOperacao?: number | null;
+    codigoPassoAtual?: number | null;
+    nomeMotorista?: string | null;
 }
 
 export interface Ficha {
@@ -66,22 +64,20 @@ export const thStyle: CSSProperties = {
     textTransform: "uppercase", letterSpacing: "0.08em", textAlign: "left",
     borderBottom: "1px solid #1F2937", background: "#0D1117",
 };
-
 export interface NotaFiscalAPI {
-    cdNotaFiscal: number;
-    cdSerNotaFiscal: string;
-    cdFilial: number;
-    cdFicha?: number | null;
-    cdBusinessUnit?: string | null;
-    noFilial?: string | null;
-    noCliente?: string | null;
-    icImpressoes?: number | null;
-    icCancelado?: number | null;
-    cdChaveNfe?: string | null;
-    cdProtocolo?: string | null;
-    cdAmbiente?: string | null;
-    cdModeloNf?: string | null;
-    dtEmissaoNf?: string | null;
-    cdCnpjCliente?: string | null;
-    vlTransmissao?: number | null;
+    numero: number
+    serieNotaFiscal: string
+    codigoFilial: number
+    codigoFicha: number | null
+    nomeFilial: string | null
+    nomeCliente: string | null
+    cnpjCliente: string | null
+    dataEmissao: string | null
+    cancelado: number | null
+    impressoes: number | null
+    valorTransmissao: number | null
+    ambiente: string | null
+    modeloNf: string | null
+    chaveNfe: string | null
+    protocolo: string | null
 }

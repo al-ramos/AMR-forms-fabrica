@@ -10,7 +10,7 @@ function DashboardPage({ fichas, loading, error, reload }: {
     fichas: Ficha[]; loading: boolean; error: string | null; reload: () => void;
 }) {
     const hoje = new Date().toISOString().slice(0, 10);
-    const fichasHoje = useMemo(() => fichas.filter(f => f.dtFicha.slice(0, 10) === hoje), [fichas, hoje]);
+    const fichasHoje = useMemo(() => fichas.filter(f => f.dtFicha?.slice(0, 10) === hoje), [fichas, hoje]);
     const emAndamento = useMemo(() => fichas.filter(f => f.status === "em_andamento"), [fichas]);
     const concluidas = useMemo(() => fichas.filter(f => f.status === "concluida"), [fichas]);
 
