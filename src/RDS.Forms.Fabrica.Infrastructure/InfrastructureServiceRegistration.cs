@@ -14,9 +14,8 @@ public static class InfrastructureServiceRegistration
         IConfiguration configuration)
     {
         services.AddDbContext<RdsDbContext>(options =>
-            options.UseSqlServer(
-                configuration.GetConnectionString("RdsFormasFabrica"),
-                sql => sql.MigrationsAssembly(typeof(RdsDbContext).Assembly.FullName)
+            options.UseSqlite(
+                configuration.GetConnectionString("RdsFormasFabrica") ?? "Data Source=rds_fabrica.db"
             )
         );
 

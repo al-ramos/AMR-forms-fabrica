@@ -1,5 +1,7 @@
 using RDS.Forms.Fabrica.Application;
 using RDS.Forms.Fabrica.Infrastructure;
+using RDS.Forms.Fabrica.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,18 +17,22 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 
-// CORS para o React
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReact", policy =>
-        policy.WithOrigins(
-                "http://localhost:3000",
-                "http://localhost:5173")
+        policy.AllowAnyOrigin()
               .AllowAnyHeader()
               .AllowAnyMethod());
 });
 
 var app = builder.Build();
+
+// ── Auto Migration (SQLite) ───────────────────────────────────────────────────
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<RdsDbContext>();
+    db.Database.Migrate();
+}
 
 // ── Pipeline ──────────────────────────────────────────────────────────────────
 if (app.Environment.IsDevelopment() || app.Environment.IsProduction())

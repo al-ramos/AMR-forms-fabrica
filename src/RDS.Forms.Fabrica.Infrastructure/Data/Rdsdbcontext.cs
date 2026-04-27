@@ -33,6 +33,15 @@ public class RdsDbContext(DbContextOptions<RdsDbContext> options) : DbContext(op
     {
         mb.HasDefaultSchema("rds");
 
+        // ── Conversores DateOnly ──────────────────────────────────────────────
+        var dateOnlyConverter = new ValueConverter<DateOnly, string>(
+            v => v.ToString("yyyy-MM-dd"),
+            v => DateOnly.Parse(v));
+
+        var dateOnlyNullableConverter = new ValueConverter<DateOnly?, string?>(
+            v => v.HasValue ? v.Value.ToString("yyyy-MM-dd") : null,
+            v => v == null ? null : DateOnly.Parse(v));
+
         // ── FILIAL ────────────────────────────────────────────────────────────
         mb.Entity<Filial>(e =>
         {
@@ -110,7 +119,6 @@ public class RdsDbContext(DbContextOptions<RdsDbContext> options) : DbContext(op
             e.ToTable("TIPO_OPERACAO_PASSO_CFG");
             e.HasNoKey();
             e.Property(x => x.CodigoTipoOperacao).HasColumnName("CD_TIPO_OPERACAO");
-            
         });
 
         // ── PRODUTO ───────────────────────────────────────────────────────────
@@ -139,21 +147,20 @@ public class RdsDbContext(DbContextOptions<RdsDbContext> options) : DbContext(op
             e.Property(x => x.CodigoTipoOperacao).HasColumnName("CD_TIPO_OPERACAO");
             e.Property(x => x.CodigoPassoAtual).HasColumnName("CD_PASSO_ATUAL");
             e.Property(x => x.CodigoLotId).HasColumnName("CD_LOTID").HasMaxLength(50);
-            e.Property(x => x.DataFicha).HasColumnName("DT_FICHA");
-            e.Property(x => x.DataSaida).HasColumnName("DT_SAIDA");
-            e.Property(x => x.DataInterfaceJde).HasColumnName("DT_INTERFACE_JDE");
+            e.Property(x => x.DataFicha).HasColumnName("DT_FICHA").HasConversion(dateOnlyConverter);
+            e.Property(x => x.DataSaida).HasColumnName("DT_SAIDA").HasConversion(dateOnlyNullableConverter);
+            e.Property(x => x.DataInterfaceJde).HasColumnName("DT_INTERFACE_JDE").HasConversion(dateOnlyNullableConverter);
             e.Property(x => x.NomeMotorista).HasColumnName("NO_MOTORISTA").HasMaxLength(100);
             e.Property(x => x.CodigoContratoManifesto).HasColumnName("CD_CONTRATO_MANIFESTO").HasMaxLength(50);
             e.Property(x => x.CodigoTransportadora).HasColumnName("CD_ADDRESS_NUMBER_TRA");
             e.Property(x => x.CodigoProdutoDepto).HasColumnName("CD_PRODUTO_DEPTO");
             e.Property(x => x.CodigoSolicitacaoTransp).HasColumnName("CD_SOLICITACAO_TRANSP").HasMaxLength(50);
             e.Property(x => x.CodigoTipoDoctoJde).HasColumnName("CD_TIPO_DOCTO_JDE").HasMaxLength(10);
-            // Computed properties — ignorar no banco
             e.Ignore(x => x.EstaFinalizada);
             e.Ignore(x => x.IntegradaComJde);
         });
 
-        // ── NOTA_FISCAL — PK composta ─────────────────────────────────────────
+        // ── NOTA_FISCAL ───────────────────────────────────────────────────────
         mb.Entity<NotaFiscal>(e =>
         {
             e.ToTable("NOTA_FISCAL");
@@ -166,16 +173,14 @@ public class RdsDbContext(DbContextOptions<RdsDbContext> options) : DbContext(op
             e.Property(x => x.NomeCliente).HasColumnName("NO_CLIENTE").HasMaxLength(200);
             e.Property(x => x.ChaveNfe).HasColumnName("CD_CHAVE_NFE").HasMaxLength(50);
             e.Property(x => x.Protocolo).HasColumnName("CD_PROTOCOLO").HasMaxLength(50);
-            e.Property(x => x.DataEmissao).HasColumnName("DT_EMISSAO_NF");
+            e.Property(x => x.DataEmissao).HasColumnName("DT_EMISSAO_NF").HasConversion(dateOnlyConverter);
             e.Property(x => x.CnpjCliente).HasColumnName("CD_CNPJ_CLIENTE").HasMaxLength(20);
             e.Property(x => x.ValorTransmissao).HasColumnName("VL_TRANSMISSAO").HasPrecision(18, 4);
-            // Propriedades sem mapeamento confirmado — ignoradas até mapear colunas reais
             e.Ignore(x => x.Ambiente);
             e.Ignore(x => x.ModeloNf);
             e.Ignore(x => x.NomeFilial);
             e.Ignore(x => x.Impressoes);
             e.Ignore(x => x.Cancelado);
-            // Computed — ignorar
             e.Ignore(x => x.EstaCancelada);
             e.Ignore(x => x.EhAmbienteProducao);
             e.Ignore(x => x.FoiTransmitida);
@@ -192,7 +197,6 @@ public class RdsDbContext(DbContextOptions<RdsDbContext> options) : DbContext(op
             e.Property(x => x.OrigemDestino).HasColumnName("IC_ORIGEM_DESTINO").HasMaxLength(1);
             e.Property(x => x.Peso1Pesagem).HasColumnName("VL_PESO_1_PESAGEM").HasPrecision(18, 4);
             e.Property(x => x.Peso2Pesagem).HasColumnName("VL_PESO_2_PESAGEM").HasPrecision(18, 4);
-            // Computed — ignorar
             e.Ignore(x => x.PesoLiquido);
         });
 
@@ -277,7 +281,6 @@ public class RdsDbContext(DbContextOptions<RdsDbContext> options) : DbContext(op
             e.Property(x => x.ValorIcmsSt).HasColumnName("VL_ICMS_ST").HasPrecision(18, 4);
             e.Property(x => x.ValorPis).HasColumnName("VL_PIS").HasPrecision(18, 4);
             e.Property(x => x.ValorCofins).HasColumnName("VL_COFINS").HasPrecision(18, 4);
-            // Computed — ignorar
             e.Ignore(x => x.ValorTotalComIpi);
         });
     }

@@ -1,0 +1,95 @@
+{
+    "service": {
+        "serviceArn": "arn:aws:ecs:sa-east-1:426222909134:service/rds-forms-fabrica/rds-forms-fabrica-api",
+        "serviceName": "rds-forms-fabrica-api",
+        "clusterArn": "arn:aws:ecs:sa-east-1:426222909134:cluster/rds-forms-fabrica",
+        "loadBalancers": [],
+        "serviceRegistries": [],
+        "status": "ACTIVE",
+        "desiredCount": 1,
+        "runningCount": 0,
+        "pendingCount": 0,
+        "launchType": "FARGATE",
+        "platformVersion": "LATEST",
+        "platformFamily": "Linux",
+        "taskDefinition": "arn:aws:ecs:sa-east-1:426222909134:task-definition/rds-forms-fabrica-api:2",
+        "deploymentConfiguration": {
+            "deploymentCircuitBreaker": {
+                "enable": false,
+                "rollback": false
+            },
+            "maximumPercent": 200,
+            "minimumHealthyPercent": 100,
+            "strategy": "ROLLING",
+            "bakeTimeInMinutes": 0
+        },
+        "deployments": [
+            {
+                "id": "ecs-svc/4681786224002900399",
+                "status": "PRIMARY",
+                "taskDefinition": "arn:aws:ecs:sa-east-1:426222909134:task-definition/rds-forms-fabrica-api:2",
+                "desiredCount": 0,
+                "pendingCount": 0,
+                "runningCount": 0,
+                "failedTasks": 0,
+                "createdAt": "2026-04-25T16:31:42.142000-03:00",
+                "updatedAt": "2026-04-25T16:31:42.142000-03:00",
+                "launchType": "FARGATE",
+                "platformVersion": "1.4.0",
+                "platformFamily": "Linux",
+                "networkConfiguration": {
+                    "awsvpcConfiguration": {
+                        "subnets": [
+                            "subnet-09cb3233abcc371fd",
+                            "subnet-034f74d26c1b75e1b",
+                            "subnet-0fb63e2b4b138721d"
+                        ],
+                        "securityGroups": [
+                            "sg-08e1ded61777543cb"
+                        ],
+                        "assignPublicIp": "ENABLED"
+                    }
+                },
+                "rolloutState": "IN_PROGRESS",
+                "rolloutStateReason": "ECS deployment ecs-svc/4681786224002900399 in progress."
+            }
+        ],
+        "roleArn": "arn:aws:iam::426222909134:role/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS",
+        "events": [],
+        "createdAt": "2026-04-25T16:31:42.142000-03:00",
+        "currentServiceRevisions": [
+            {
+                "arn": "arn:aws:ecs:sa-east-1:426222909134:service-revision/rds-forms-fabrica/rds-forms-fabrica-api/4681786224002900399",
+                "requestedTaskCount": 0,
+                "runningTaskCount": 0,
+                "pendingTaskCount": 0
+            }
+        ],
+        "placementConstraints": [],
+        "placementStrategy": [],
+        "networkConfiguration": {
+            "awsvpcConfiguration": {
+                "subnets": [
+                    "subnet-09cb3233abcc371fd",
+                    "subnet-034f74d26c1b75e1b",
+                    "subnet-0fb63e2b4b138721d"
+                ],
+                "securityGroups": [
+                    "sg-08e1ded61777543cb"
+                ],
+                "assignPublicIp": "ENABLED"
+            }
+        },
+        "healthCheckGracePeriodSeconds": 0,
+        "schedulingStrategy": "REPLICA",
+        "deploymentController": {
+            "type": "ECS"
+        },
+        "createdBy": "arn:aws:iam::426222909134:user/dev-pessoal",
+        "enableECSManagedTags": false,
+        "propagateTags": "NONE",
+        "enableExecuteCommand": false,
+        "availabilityZoneRebalancing": "ENABLED",
+        "resourceManagementType": "CUSTOMER"
+    }
+}
