@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 
-export const API = "";
+export const API = import.meta.env.VITE_API_URL || "";
 export const PASSO_FINAL = 4;
 export const passos = ["Entrada", "Pesagem", "Carregamento", "Saída"] as const;
 

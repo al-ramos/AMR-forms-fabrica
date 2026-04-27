@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-const API = "http://localhost:5186";
+const API = import.meta.env.VITE_API_URL || '';
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
 const Icon = ({ d, size = 20 }: { d: string; size?: number }) => (

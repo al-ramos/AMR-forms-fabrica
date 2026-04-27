@@ -113,7 +113,7 @@ export default function App() {
                         <span style={{ fontSize: 11, color: "#374151" }}>RDS Forms Fábrica — v1.0.0</span>
                         <span style={{ fontSize: 11, color: "#374151", fontFamily: "'DM Mono', monospace" }}>
                             API: <span style={{ color: error ? "#EF4444" : "#10B981" }}>{error ? "● erro" : "● online"}</span>
-                            &nbsp;|&nbsp; localhost:5186
+                            &nbsp;|&nbsp; 18.229.142.33:8080
                         </span>
                     </footer>
                 </div>

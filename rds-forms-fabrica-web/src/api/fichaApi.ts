@@ -1,8 +1,4 @@
-import axios from 'axios'
-
-const api = axios.create({
-  baseURL: 'http://localhost:5186',
-})
+import api from './api'
 
 export interface Ficha {
   cdFicha: number

@@ -3,7 +3,7 @@ import { statusMap, icons, type Ficha } from './types';
 import { passos, tdStyle, thStyle } from "./types";
 import { Icon, StatusBadge, PassoTimeline, Spinner, ErrorBox } from "./ui";
 
-const API = "http://localhost:5186";
+const API = import.meta.env.VITE_API_URL || '';
 
 // ── Detalhe da ficha selecionada ──────────────────────────────────────────────
 const FichaDetalhe = memo(({ ficha, onClose, onAtualizar }: {

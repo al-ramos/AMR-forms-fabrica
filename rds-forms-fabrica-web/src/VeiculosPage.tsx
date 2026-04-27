@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, useCallback } from "react";
 import { icons } from "./types";
 import { Icon, Spinner, ErrorBox } from "./ui";
 
-const API = "http://localhost:5186";
+const API = import.meta.env.VITE_API_URL || '';
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 interface Veiculo {

@@ -1,8 +1,4 @@
-import axios from 'axios'
-
-const api = axios.create({
-  baseURL: 'http://localhost:5186',
-})
+import api from './api'
 
 export interface Veiculo {
   cdPlacaVeiculo: string
@@ -10,8 +6,6 @@ export interface Veiculo {
 }
 
 export const veiculoApi = {
-  getByFilial: (cdFilial: number) =>
-    api.get<Veiculo[]>(`/api/Veiculo/filial/${cdFilial}`),
-  getAll: () =>
-    api.get<Veiculo[]>('/api/Veiculo'),
+  getByFilial: (cdFilial: number) => api.get<Veiculo[]>(`/api/Veiculo/filial/${cdFilial}`),
+  getAll: () => api.get<Veiculo[]>('/api/Veiculo'),
 }
