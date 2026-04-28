@@ -128,12 +128,47 @@ const FichaDetalhe = memo(({ ficha, onClose, onAtualizar }: {
             {/* Ação */}
             <div style={{ marginTop: 20, display: "flex", justifyContent: "flex-end" }}>
                 {isUltimoPasso ? (
-                    <div style={{
-                        display: "flex", alignItems: "center", gap: 8,
-                        fontSize: 13, color: "#10B981", fontWeight: 700,
-                    }}>
-                        <span>✓</span> Operação concluída
-                    </div>
+                    ficha.status === "concluida" ? (
+                        <div style={{
+                            display: "flex", alignItems: "center", gap: 8,
+                            fontSize: 13, color: "#10B981", fontWeight: 700,
+                        }}>
+                            <span>✓</span> Saída registrada
+                        </div>
+                    ) : (
+                        <button
+                            onClick={async () => {
+                                setAvancando(true);
+                                setErro(null);
+                                try {
+                                    const res = await fetch(`${API}/api/Ficha/${ficha.cdFicha}/saida`, {
+                                        method: "PATCH",
+                                        headers: { "Content-Type": "application/json" },
+                                    });
+                                    onAtualizar({ ...ficha, status: "concluida" });
+                                } catch (e) {
+                                    setErro(e.message ?? "Erro ao registrar saída");
+                                } finally {
+                                    setAvancando(false);
+                                }
+                            }}
+                            disabled={avancando}
+                            style={{
+                                background: avancando ? "#374151" : "linear-gradient(135deg, #059669, #065F46)",
+                                border: "none", borderRadius: 6, color: "white",
+                                fontWeight: 700, fontSize: 13, padding: "10px 20px",
+                                cursor: avancando ? "not-allowed" : "pointer",
+                                display: "flex", alignItems: "center", gap: 8,
+                                transition: "all 0.15s",
+                            }}
+                        >
+                            {avancando ? (
+                                <><Icon d={icons.refresh} size={14} /> Registrando...</>
+                            ) : (
+                                <><Icon d={icons.truck} size={14} /> Registrar Saída</>
+                            )}
+                        </button>
+                    )
                 ) : (
                     <button
                         onClick={handleAvancar}

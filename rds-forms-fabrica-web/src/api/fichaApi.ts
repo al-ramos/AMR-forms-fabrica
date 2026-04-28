@@ -13,7 +13,9 @@ export interface Ficha {
 }
 
 export const fichaApi = {
-  getAll: () => api.get<Ficha[]>('/api/Ficha'),
-  getById: (id: number) => api.get<Ficha>(`/api/Ficha/${id}`),
-  getByFilial: (cdFilial: number) => api.get<Ficha[]>(`/api/Ficha/filial/${cdFilial}`),
+  getAll:         () => api.get<Ficha[]>('/api/Ficha'),
+  getById:        (id: number) => api.get<Ficha>(`/api/Ficha/${id}`),
+  getByFilial:    (cdFilial: number) => api.get<Ficha[]>(`/api/Ficha/filial/${cdFilial}`),
+  avancarPasso:   (id: number) => api.patch(`/api/Ficha/${id}/passo`),
+  registrarSaida: (id: number) => api.patch(`/api/Ficha/${id}/saida`),
 }

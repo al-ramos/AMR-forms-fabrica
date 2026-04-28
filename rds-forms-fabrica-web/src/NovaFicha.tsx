@@ -1,4 +1,6 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { erpApi } from "./api/erpApi";
+import type { PedidoVendaERP } from "./api/erpApi";
 
 const API = import.meta.env.VITE_API_URL || '';
 
@@ -15,12 +17,12 @@ const icons = {
     close: "M18 6L6 18M6 6l12 12",
     loader: "M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83",
     ficha: "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2",
-    user: "M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8",
     truck: "M1 3h15v13H1zM16 8h4l3 3v5h-7V8zM5.5 21a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM18.5 21a1.5 1.5 0 100-3 1.5 1.5 0 000 3z",
     box: "M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0",
     map: "M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2zM9 22V12h6v10",
     note: "M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8zM14 2v6h6M16 13H8M16 17H8M10 9H8",
     arrow: "M19 12H5M12 5l-7 7 7 7",
+    erp: "M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5",
 };
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
@@ -28,6 +30,7 @@ interface NovaFichaForm {
     codigoFilial: string;
     codigoTipoOperacao: string;
     placaVeiculo: string;
+    pedidoVendaId: string;
 }
 
 interface Veiculo {
@@ -40,7 +43,6 @@ interface NovaFichaProps {
     onSuccess: () => void;
 }
 
-// ─── Dados de seleção (mockados — troque por API se tiver endpoint de filiais) ─
 const filiais = [
     { value: "1", label: "Filial São Paulo" },
     { value: "2", label: "Filial Campinas" },
@@ -53,7 +55,6 @@ const tiposOperacao = [
     { value: "3", label: "Transferência" },
 ];
 
-// ─── Estilos base ─────────────────────────────────────────────────────────────
 const inputStyle: React.CSSProperties = {
     width: "100%",
     background: "#0D1117",
@@ -80,7 +81,6 @@ const labelStyle: React.CSSProperties = {
     gap: 6,
 };
 
-// ─── Campo individual ─────────────────────────────────────────────────────────
 function Field({ label, icon, required, children }: {
     label: string; icon?: string; required?: boolean; children: React.ReactNode;
 }) {
@@ -96,16 +96,19 @@ function Field({ label, icon, required, children }: {
     );
 }
 
-// ─── Componente principal ─────────────────────────────────────────────────────
 export default function NovaFicha({ onBack, onSuccess }: NovaFichaProps) {
     const [form, setForm] = useState<NovaFichaForm>({
         codigoFilial: "",
         codigoTipoOperacao: "",
         placaVeiculo: "",
+        pedidoVendaId: "",
     });
 
     const [veiculos, setVeiculos] = useState<Veiculo[]>([]);
     const [loadingVeiculos, setLoadingVeiculos] = useState(false);
+    const [pedidosERP, setPedidosERP] = useState<PedidoVendaERP[]>([]);
+    const [loadingERP, setLoadingERP] = useState(false);
+    const [pedidoSelecionado, setPedidoSelecionado] = useState<PedidoVendaERP | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
@@ -127,6 +130,25 @@ export default function NovaFicha({ onBack, onSuccess }: NovaFichaProps) {
             .finally(() => setLoadingVeiculos(false));
     }, [form.codigoFilial]);
 
+    // ── Carrega pedidos aprovados do ERP ao montar ────────────────────────────
+    useEffect(() => {
+        setLoadingERP(true);
+        erpApi.getPedidosAprovados(1)
+            .then(r => setPedidosERP(r.data))
+            .catch(() => setPedidosERP([]))
+            .finally(() => setLoadingERP(false));
+    }, []);
+
+    // ── Atualiza preview do pedido selecionado ────────────────────────────────
+    useEffect(() => {
+        if (!form.pedidoVendaId) {
+            setPedidoSelecionado(null);
+            return;
+        }
+        const pedido = pedidosERP.find(p => p.id === Number(form.pedidoVendaId));
+        setPedidoSelecionado(pedido ?? null);
+    }, [form.pedidoVendaId, pedidosERP]);
+
     const set = (field: keyof NovaFichaForm) => (
         e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
     ) => {
@@ -147,11 +169,11 @@ export default function NovaFicha({ onBack, onSuccess }: NovaFichaProps) {
         setError(null);
 
         try {
-            // Payload exato conforme AbrirFichaCommand
             const payload = {
                 codigoFilial: Number(form.codigoFilial),
                 placaVeiculo: form.placaVeiculo,
                 codigoTipoOperacao: Number(form.codigoTipoOperacao),
+                ...(form.pedidoVendaId ? { pedidoVendaId: Number(form.pedidoVendaId) } : {}),
             };
 
             const res = await fetch(`${API}/api/Ficha`, {
@@ -174,7 +196,6 @@ export default function NovaFicha({ onBack, onSuccess }: NovaFichaProps) {
         }
     };
 
-    // ── Tela de sucesso ───────────────────────────────────────────────────────
     if (success) {
         return (
             <div style={{
@@ -194,7 +215,6 @@ export default function NovaFicha({ onBack, onSuccess }: NovaFichaProps) {
         );
     }
 
-    // ── Formulário ────────────────────────────────────────────────────────────
     return (
         <div>
             <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 28 }}>
@@ -306,7 +326,91 @@ export default function NovaFicha({ onBack, onSuccess }: NovaFichaProps) {
                         </Field>
                     </div>
 
-                    {/* Erro da API */}
+                    <div style={{ borderTop: "1px solid #1F2937", marginBottom: 28 }} />
+
+                    {/* Seção 3 — Pedido ERP */}
+                    <div style={{ marginBottom: 28 }}>
+                        <div style={{
+                            fontSize: 11, fontWeight: 700, color: "#E85D04",
+                            textTransform: "uppercase", letterSpacing: "0.12em",
+                            marginBottom: 6, display: "flex", alignItems: "center", gap: 8
+                        }}>
+                            <Icon d={icons.erp} size={13} /> Vincular Pedido ERP
+                            <span style={{ fontSize: 10, color: "#6B7280", fontWeight: 400, textTransform: "none", letterSpacing: 0 }}>
+                                — opcional
+                            </span>
+                        </div>
+                        <p style={{ fontSize: 12, color: "#6B7280", marginBottom: 16 }}>
+                            Associe esta ficha a um pedido de venda aprovado no ERP para rastreabilidade completa.
+                        </p>
+
+                        <Field label="Pedido de Venda Aprovado" icon={icons.note}>
+                            <select
+                                value={form.pedidoVendaId}
+                                onChange={set("pedidoVendaId")}
+                                disabled={loadingERP}
+                                style={{ ...inputStyle, cursor: "pointer", maxWidth: 480 }}
+                            >
+                                {loadingERP
+                                    ? <option value="">Carregando pedidos do ERP...</option>
+                                    : <>
+                                        <option value="">Nenhum — criar ficha avulsa</option>
+                                        {pedidosERP.map(p => (
+                                            <option key={p.id} value={p.id}>
+                                                PV#{p.id} — Cliente {p.clienteId} — R$ {p.total.toFixed(2)} — {new Date(p.dataEmissao).toLocaleDateString('pt-BR')}
+                                            </option>
+                                        ))}
+                                    </>
+                                }
+                            </select>
+                        </Field>
+
+                        {pedidoSelecionado && (
+                            <div style={{
+                                marginTop: 14, background: "#0D1117",
+                                border: "1px solid #374151", borderRadius: 8, padding: 16,
+                            }}>
+                                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
+                                    <span style={{ fontSize: 12, fontWeight: 700, color: "#E85D04" }}>
+                                        PV#{pedidoSelecionado.id}
+                                    </span>
+                                    <span style={{
+                                        fontSize: 11, padding: "2px 8px", borderRadius: 4,
+                                        background: "rgba(16,185,129,0.1)", color: "#10B981",
+                                        border: "1px solid rgba(16,185,129,0.2)"
+                                    }}>
+                                        {pedidoSelecionado.status}
+                                    </span>
+                                </div>
+                                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+                                    <div>
+                                        <div style={{ fontSize: 10, color: "#6B7280", textTransform: "uppercase", letterSpacing: "0.08em" }}>Total</div>
+                                        <div style={{ fontSize: 14, fontWeight: 700, color: "#F9FAFB" }}>
+                                            R$ {pedidoSelecionado.total.toFixed(2)}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div style={{ fontSize: 10, color: "#6B7280", textTransform: "uppercase", letterSpacing: "0.08em" }}>Itens</div>
+                                        <div style={{ fontSize: 14, fontWeight: 700, color: "#F9FAFB" }}>
+                                            {pedidoSelecionado.itens.length} produto(s)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style={{ marginTop: 10, borderTop: "1px solid #1F2937", paddingTop: 10 }}>
+                                    {pedidoSelecionado.itens.map((item, i) => (
+                                        <div key={i} style={{
+                                            display: "flex", justifyContent: "space-between",
+                                            fontSize: 12, color: "#9CA3AF", padding: "3px 0"
+                                        }}>
+                                            <span>{item.produtoNome || `Produto #${item.produtoId}`} × {item.quantidade}</span>
+                                            <span>R$ {(item.quantidade * item.precoUnitario).toFixed(2)}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
                     {error && (
                         <div style={{
                             marginBottom: 20, padding: "12px 16px",
@@ -321,7 +425,6 @@ export default function NovaFicha({ onBack, onSuccess }: NovaFichaProps) {
                         </div>
                     )}
 
-                    {/* Ações */}
                     <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
                         <button onClick={onBack} disabled={loading} style={{
                             background: "transparent", border: "1px solid #374151", borderRadius: 6,
