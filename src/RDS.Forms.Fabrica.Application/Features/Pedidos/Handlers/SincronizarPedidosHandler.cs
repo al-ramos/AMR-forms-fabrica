@@ -54,6 +54,7 @@ public class SincronizarPedidosHandler(
                             item.UnidadeMedida
                         ));
 
+                    pedido.MarcarSincronizado();
                     await pedidoRepo.AdicionarAsync(pedido);
                     inseridos++;
                 }

@@ -28,6 +28,11 @@ public class Pedido
         DataPedido = dataPedido;
     }
 
+    public DateTime? SincronizadoEm { get; private set; }
+
+    public void MarcarSincronizado()
+        => SincronizadoEm = DateTime.UtcNow;
+
     public void AdicionarItem(PedidoItem item)
     {
         _itens.Add(item);

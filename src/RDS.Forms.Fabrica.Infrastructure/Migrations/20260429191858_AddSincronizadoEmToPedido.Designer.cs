@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RDS.Forms.Fabrica.Infrastructure.Data;
 
@@ -10,9 +11,11 @@ using RDS.Forms.Fabrica.Infrastructure.Data;
 namespace RDS.Forms.Fabrica.Infrastructure.Migrations
 {
     [DbContext(typeof(RdsDbContext))]
-    partial class RdsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260429191858_AddSincronizadoEmToPedido")]
+    partial class AddSincronizadoEmToPedido
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
