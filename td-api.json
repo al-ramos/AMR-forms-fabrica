@@ -1,0 +1,15 @@
+[{
+  "name": "api",
+  "image": "426222909134.dkr.ecr.sa-east-1.amazonaws.com/rds-forms-fabrica-api:latest",
+  "portMappings": [{"containerPort": 5186, "protocol": "tcp"}],
+  "essential": true,
+  "logConfiguration": {
+    "logDriver": "awslogs",
+    "options": {
+      "awslogs-group": "/ecs/rds-forms-fabrica-api",
+      "awslogs-region": "sa-east-1",
+      "awslogs-stream-prefix": "ecs",
+      "awslogs-create-group": "true"
+    }
+  }
+}]

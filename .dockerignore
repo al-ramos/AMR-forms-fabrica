@@ -1,0 +1,8 @@
+**/bin/
+**/obj/
+**/node_modules/
+**/.git/
+**/.vs/
+**/dist/
+src/RDS.Forms.Fabrica.API/rds_fabrica.db-shm
+src/RDS.Forms.Fabrica.API/rds_fabrica.db-wal

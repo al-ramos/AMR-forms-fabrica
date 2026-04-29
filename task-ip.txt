@@ -1,0 +1,99 @@
+{
+    "tasks": [
+        {
+            "attachments": [
+                {
+                    "id": "73575397-107e-4224-885b-5ed8d2c04cf6",
+                    "type": "ElasticNetworkInterface",
+                    "status": "ATTACHED",
+                    "details": [
+                        {
+                            "name": "subnetId",
+                            "value": "subnet-09cb3233abcc371fd"
+                        },
+                        {
+                            "name": "networkInterfaceId",
+                            "value": "eni-0eb91a7c7af14e05c"
+                        },
+                        {
+                            "name": "macAddress",
+                            "value": "0a:95:46:e2:ab:c3"
+                        },
+                        {
+                            "name": "privateDnsName",
+                            "value": "ip-172-31-34-28.sa-east-1.compute.internal"
+                        },
+                        {
+                            "name": "privateIPv4Address",
+                            "value": "172.31.34.28"
+                        }
+                    ]
+                }
+            ],
+            "attributes": [
+                {
+                    "name": "ecs.cpu-architecture",
+                    "value": "x86_64"
+                }
+            ],
+            "availabilityZone": "sa-east-1c",
+            "clusterArn": "arn:aws:ecs:sa-east-1:426222909134:cluster/rds-forms-fabrica",
+            "connectivity": "CONNECTED",
+            "connectivityAt": "2026-04-25T16:31:59.955000-03:00",
+            "containers": [
+                {
+                    "containerArn": "arn:aws:ecs:sa-east-1:426222909134:container/rds-forms-fabrica/cd01f84dc8ed4d9da6899a491a1808ae/11f533e0-b996-47df-bd69-389129a006eb",
+                    "taskArn": "arn:aws:ecs:sa-east-1:426222909134:task/rds-forms-fabrica/cd01f84dc8ed4d9da6899a491a1808ae",
+                    "name": "api",
+                    "image": "426222909134.dkr.ecr.sa-east-1.amazonaws.com/rds-forms-fabrica-api:latest",
+                    "imageDigest": "sha256:9e54646717769f8b57b6e0a1c9980c8a47e24fc0c838091702f1c36bffda971b",
+                    "runtimeId": "cd01f84dc8ed4d9da6899a491a1808ae-0946514567",
+                    "lastStatus": "RUNNING",
+                    "networkBindings": [],
+                    "networkInterfaces": [
+                        {
+                            "attachmentId": "73575397-107e-4224-885b-5ed8d2c04cf6",
+                            "privateIpv4Address": "172.31.34.28"
+                        }
+                    ],
+                    "healthStatus": "UNKNOWN",
+                    "cpu": "0"
+                }
+            ],
+            "cpu": "256",
+            "createdAt": "2026-04-25T16:31:56.026000-03:00",
+            "desiredStatus": "RUNNING",
+            "enableExecuteCommand": false,
+            "group": "service:rds-forms-fabrica-api",
+            "healthStatus": "UNKNOWN",
+            "lastStatus": "RUNNING",
+            "launchType": "FARGATE",
+            "memory": "512",
+            "overrides": {
+                "containerOverrides": [
+                    {
+                        "name": "api"
+                    }
+                ],
+                "inferenceAcceleratorOverrides": []
+            },
+            "platformVersion": "1.4.0",
+            "platformFamily": "Linux",
+            "pullStartedAt": "2026-04-25T16:32:06.411000-03:00",
+            "pullStoppedAt": "2026-04-25T16:32:16.298000-03:00",
+            "startedAt": "2026-04-25T16:32:17.064000-03:00",
+            "startedBy": "ecs-svc/4681786224002900399",
+            "tags": [],
+            "taskArn": "arn:aws:ecs:sa-east-1:426222909134:task/rds-forms-fabrica/cd01f84dc8ed4d9da6899a491a1808ae",
+            "taskDefinitionArn": "arn:aws:ecs:sa-east-1:426222909134:task-definition/rds-forms-fabrica-api:2",
+            "version": 4,
+            "ephemeralStorage": {
+                "sizeInGiB": 20
+            },
+            "fargateEphemeralStorage": {
+                "sizeInGiB": 20
+            }
+        }
+    ],
+    "failures": []
+}

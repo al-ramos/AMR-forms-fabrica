@@ -1,0 +1,24 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rds_api
+    ports:
+      - "5186:8080"
+    environment:
+      ConnectionStrings__RdsFormasFabrica: "Server=host.docker.internal,1433;Database=RDS_Forms_Fabrica;User Id=rds_app;Password=844932;TrustServerCertificate=True;MultipleActiveResultSets=true"
+      ASPNETCORE_ENVIRONMENT: "Development"
+    restart: unless-stopped
+  web:
+    build:
+      context: ./rds-forms-fabrica-web
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: "http://localhost:5186"
+    container_name: rds_web
+    ports:
+      - "3000:80"
+    depends_on:
+      - api
+    restart: unless-stopped
