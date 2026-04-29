@@ -2,6 +2,7 @@ import axios from 'axios'
 
 const erp = axios.create({
   baseURL: import.meta.env.VITE_ERP_URL || 'http://localhost:5186',
+  headers: { 'Cache-Control': 'no-store' },
 })
 
 export interface PedidoVendaERP {
