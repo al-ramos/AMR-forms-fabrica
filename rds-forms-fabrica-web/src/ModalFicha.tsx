@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { fichaApi } from "./api/fichaApi";
 
-const API = import.meta.env.VITE_API_URL || '';
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
 const Icon = ({ d, size = 20 }: { d: string; size?: number }) => (
@@ -257,9 +256,8 @@ export default function ModalFicha({ cdFicha, onClose }: ModalFichaProps) {
         setLoading(true);
         setError(null);
         try {
-            const res = await fetch(`${API}/api/Ficha/${cdFicha}`);
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            setFicha(await res.json());
+            const res = const res = await fichaApi.getById(cdFicha);
+            setFicha(res.data);
         } catch (e: any) {
             setError(e.message ?? "Erro ao carregar ficha");
         } finally {
