@@ -97,6 +97,18 @@ public class PedidoRepository(RdsDbContext context) : IPedidoRepository
         => await context.PedidoItens
             .Where(i => i.CodigoPedido == codigoPedido)
             .ToListAsync();
+
+    public async Task AdicionarAsync(Pedido pedido)
+        => await context.Pedidos.AddAsync(pedido);
+
+    public Task AtualizarAsync(Pedido pedido)
+    {
+        context.Pedidos.Update(pedido);
+        return Task.CompletedTask;
+    }
+
+    public async Task AdicionarItemAsync(PedidoItem item)
+        => await context.PedidoItens.AddAsync(item);
 }
 
 public class NotaFiscalRepository(RdsDbContext context) : INotaFiscalRepository

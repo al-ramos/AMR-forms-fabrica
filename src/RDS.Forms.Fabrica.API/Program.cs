@@ -1,3 +1,6 @@
+using RDS.Forms.Fabrica.API.Services;
+using RDS.Forms.Fabrica.Domain.Interfaces;
+using RDS.Forms.Fabrica.Infrastructure.ExternalServices;
 using RDS.Forms.Fabrica.Application;
 using RDS.Forms.Fabrica.Infrastructure;
 using RDS.Forms.Fabrica.Infrastructure.Data;
@@ -24,6 +27,13 @@ builder.Services.AddCors(options =>
               .AllowAnyHeader()
               .AllowAnyMethod());
 });
+
+builder.Services.AddHttpClient<IErpHttpClient, ErpHttpClient>(client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["ErpCore:BaseUrl"] ?? "http://localhost:5000");
+    client.Timeout = TimeSpan.FromSeconds(30);
+});
+builder.Services.AddHostedService<SincronizacaoPedidosService>();
 
 var app = builder.Build();
 

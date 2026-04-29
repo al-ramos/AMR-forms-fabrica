@@ -37,6 +37,9 @@ public interface IPedidoRepository
     Task<Pedido?> ObterPorIdAsync(int id);
     Task<IEnumerable<Pedido>> ListarPorFilialAsync(int codigoFilial);
     Task<IEnumerable<PedidoItem>> ListarItensPorPedidoAsync(int codigoPedido);
+    Task AdicionarAsync(Pedido pedido);
+    Task AtualizarAsync(Pedido pedido);
+    Task AdicionarItemAsync(PedidoItem item);
 }
 
 public interface INotaFiscalRepository
