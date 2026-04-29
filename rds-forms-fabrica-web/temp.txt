@@ -1,6 +1,28 @@
-/c/GitHub/RDS.Forms.Fabrica/src/RDS.Forms.Fabrica.Application/Features/Pedidos/Handlers/SincronizarPedidosHandler.cs:21:        IEnumerable<PedidoErpDto> pedidosErp;
-/c/GitHub/RDS.Forms.Fabrica/src/RDS.Forms.Fabrica.Domain/Interfaces/IErpHttpClient.cs:5:    Task<IEnumerable<PedidoErpDto>> ObterPedidosAprovadosAsync(int codigoFilial, CancellationToken ct = default);
-/c/GitHub/RDS.Forms.Fabrica/src/RDS.Forms.Fabrica.Domain/Interfaces/IErpHttpClient.cs:8:public record PedidoErpDto(
-/c/GitHub/RDS.Forms.Fabrica/src/RDS.Forms.Fabrica.Infrastructure/ExternalServices/ErpHttpClient.cs:8:    public async Task<IEnumerable<PedidoErpDto>> ObterPedidosAprovadosAsync(
-/c/GitHub/RDS.Forms.Fabrica/src/RDS.Forms.Fabrica.Infrastructure/ExternalServices/ErpHttpClient.cs:11:        var result = await http.GetFromJsonAsync<IEnumerable<PedidoErpDto>>(
-/c/GitHub/RDS.Forms.Fabrica/src/RDS.Forms.Fabrica.Infrastructure/ExternalServices/ErpHttpClient.cs:14:        return result ?? Enumerable.Empty<PedidoErpDto>();
+/c/GitHub/RDS.Forms.Fabrica/src/RDS.Forms.Fabrica.Domain/BusinessUnit.cs
+/c/GitHub/RDS.Forms.Fabrica/src/RDS.Forms.Fabrica.Domain/Departamento.cs
+/c/GitHub/RDS.Forms.Fabrica/src/RDS.Forms.Fabrica.Domain/Estacao.cs
+/c/GitHub/RDS.Forms.Fabrica/src/RDS.Forms.Fabrica.Domain/Ficha.cs
+/c/GitHub/RDS.Forms.Fabrica/src/RDS.Forms.Fabrica.Domain/FichaBalanca.cs
+/c/GitHub/RDS.Forms.Fabrica/src/RDS.Forms.Fabrica.Domain/FichaLoadDetalhe.cs
+/c/GitHub/RDS.Forms.Fabrica/src/RDS.Forms.Fabrica.Domain/Filial.cs
+/c/GitHub/RDS.Forms.Fabrica/src/RDS.Forms.Fabrica.Domain/Interfaces/IErpHttpClient.cs
+/c/GitHub/RDS.Forms.Fabrica/src/RDS.Forms.Fabrica.Domain/Interfaces/IUnitOfWork.cs
+/c/GitHub/RDS.Forms.Fabrica/src/RDS.Forms.Fabrica.Domain/IRepositories.cs
+/c/GitHub/RDS.Forms.Fabrica/src/RDS.Forms.Fabrica.Domain/LogSistema.cs
+/c/GitHub/RDS.Forms.Fabrica/src/RDS.Forms.Fabrica.Domain/MensagemNotaFiscal.cs
+/c/GitHub/RDS.Forms.Fabrica/src/RDS.Forms.Fabrica.Domain/NaturezaOperacao.cs
+/c/GitHub/RDS.Forms.Fabrica/src/RDS.Forms.Fabrica.Domain/NotaFiscal.cs
+/c/GitHub/RDS.Forms.Fabrica/src/RDS.Forms.Fabrica.Domain/NotaFiscalDetalhe.cs
+/c/GitHub/RDS.Forms.Fabrica/src/RDS.Forms.Fabrica.Domain/obj/Debug/net8.0/.NETCoreApp,Version=v8.0.AssemblyAttributes.cs
+/c/GitHub/RDS.Forms.Fabrica/src/RDS.Forms.Fabrica.Domain/obj/Debug/net8.0/RDS.Forms.Fabrica.Domain.AssemblyInfo.cs
+/c/GitHub/RDS.Forms.Fabrica/src/RDS.Forms.Fabrica.Domain/obj/Debug/net8.0/RDS.Forms.Fabrica.Domain.GlobalUsings.g.cs
+/c/GitHub/RDS.Forms.Fabrica/src/RDS.Forms.Fabrica.Domain/Passo.cs
+/c/GitHub/RDS.Forms.Fabrica/src/RDS.Forms.Fabrica.Domain/Pedido.cs
+/c/GitHub/RDS.Forms.Fabrica/src/RDS.Forms.Fabrica.Domain/PedidoItem.cs
+/c/GitHub/RDS.Forms.Fabrica/src/RDS.Forms.Fabrica.Domain/Produto.cs
+/c/GitHub/RDS.Forms.Fabrica/src/RDS.Forms.Fabrica.Domain/ProdutoDetalhe.cs
+/c/GitHub/RDS.Forms.Fabrica/src/RDS.Forms.Fabrica.Domain/TipoExpedicaoRecepcao.cs
+/c/GitHub/RDS.Forms.Fabrica/src/RDS.Forms.Fabrica.Domain/TipoOperacao.cs
+/c/GitHub/RDS.Forms.Fabrica/src/RDS.Forms.Fabrica.Domain/TipoOperacaoPasso.cs
+/c/GitHub/RDS.Forms.Fabrica/src/RDS.Forms.Fabrica.Domain/TipoOperacaoPassoCfg.cs
+/c/GitHub/RDS.Forms.Fabrica/src/RDS.Forms.Fabrica.Domain/Veiculo.cs
