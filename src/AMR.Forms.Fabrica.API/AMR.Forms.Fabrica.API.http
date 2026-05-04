@@ -1,0 +1,6 @@
+@AMR.Forms.Fabrica.API_HostAddress = http://localhost:5074
+
+GET {{AMR.Forms.Fabrica.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

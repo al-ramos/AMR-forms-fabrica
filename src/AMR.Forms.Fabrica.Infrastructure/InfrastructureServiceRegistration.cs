@@ -1,0 +1,39 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using AMR.Forms.Fabrica.Domain.Interfaces;
+using AMR.Forms.Fabrica.Infrastructure.Data;
+using AMR.Forms.Fabrica.Infrastructure.Repositories;
+
+namespace AMR.Forms.Fabrica.Infrastructure;
+
+public static class InfrastructureServiceRegistration
+{
+    public static IServiceCollection AddInfrastructureServices(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        services.AddDbContext<RdsDbContext>(options =>
+            options.UseSqlite(
+                configuration.GetConnectionString("AmrFormasFabrica") ?? "Data Source=rds_fabrica.db"
+            )
+        );
+
+        services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<RdsDbContext>());
+        services.AddScoped<IFichaRepository, FichaRepository>();
+        services.AddScoped<IFilialRepository, FilialRepository>();
+        services.AddScoped<ITipoOperacaoRepository, TipoOperacaoRepository>();
+        services.AddScoped<IProdutoRepository, ProdutoRepository>();
+        services.AddScoped<IPedidoRepository, PedidoRepository>();
+        services.AddScoped<INotaFiscalRepository, NotaFiscalRepository>();
+        services.AddScoped<IVeiculoRepository, VeiculoRepository>();
+        services.AddScoped<IFichaBalancaRepository, FichaBalancaRepository>();
+        services.AddScoped<IFichaLoadDetalheRepository, FichaLoadDetalheRepository>();
+        services.AddScoped<ILogSistemaRepository, LogSistemaRepository>();
+        services.AddScoped<IDepartamentoRepository, DepartamentoRepository>();
+        services.AddScoped<IBusinessUnitRepository, BusinessUnitRepository>();
+        services.AddScoped<INotaFiscalDetalheRepository, NotaFiscalDetalheRepository>();
+
+        return services;
+    }
+}

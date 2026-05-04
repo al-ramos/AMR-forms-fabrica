@@ -1,6 +1,0 @@
-@RDS.Forms.Fabrica.API_HostAddress = http://localhost:5074
-
-GET {{RDS.Forms.Fabrica.API_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
