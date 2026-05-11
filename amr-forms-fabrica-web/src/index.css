@@ -1,8 +1,6 @@
 /* ============================================================
    AMR Forms Fabrica — tema Bootstrap customizado
-   Edite as variaveis abaixo para ajustar o layout globalmente
    ============================================================ */
-
 :root {
   font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -38,7 +36,6 @@ html, body, #root {
   flex-direction: column;
   overflow-y: auto;
 }
-
 .amr-sidebar-brand {
   padding: 1.1rem 1.25rem .9rem;
   border-bottom: 1px solid rgba(255,255,255,.07);
@@ -48,9 +45,7 @@ html, body, #root {
   text-decoration: none;
   display: block;
 }
-
 .amr-sidebar-brand span { color: var(--amr-sidebar-accent); font-weight: 400; }
-
 .amr-sidebar-section {
   font-size: 10px;
   font-weight: 600;
@@ -58,8 +53,8 @@ html, body, #root {
   letter-spacing: .08em;
   color: #546e7a;
   padding: .85rem 1.25rem .3rem;
+  margin: 0;
 }
-
 .amr-sidebar .nav-link {
   color: var(--amr-sidebar-text);
   font-size: 13.5px;
@@ -70,11 +65,18 @@ html, body, #root {
   gap: 9px;
   transition: background .12s, color .12s;
 }
-
 .amr-sidebar .nav-link:hover  { background: var(--amr-sidebar-hover); color: #fff; }
 .amr-sidebar .nav-link.active { background: var(--amr-sidebar-active); color: #fff; font-weight: 500; }
 .amr-sidebar .nav-link i      { font-size: 16px; opacity: .8; }
 .amr-sidebar .nav-link.active i { opacity: 1; }
+
+/* ---------- Content wrapper ---------- */
+.amr-content-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
 
 /* ---------- Topbar ---------- */
 .amr-topbar {
@@ -86,6 +88,26 @@ html, body, #root {
   align-items: center;
   padding: 0 1.5rem;
   gap: 10px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  flex-shrink: 0;
+}
+.amr-topbar-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #212529;
+  margin: 0;
+}
+.amr-topbar-subtitle {
+  font-size: 12px;
+  color: #6c757d;
+  margin: 0;
 }
 
-.amr-topbar-title    { font-size: 15px; font-
+/* ---------- Main content ---------- */
+.amr-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.5rem;
+}
