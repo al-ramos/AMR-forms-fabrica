@@ -33,6 +33,13 @@ builder.Services.AddHttpClient<IErpHttpClient, ErpHttpClient>(client =>
     client.BaseAddress = new Uri(builder.Configuration["ErpCore:BaseUrl"] ?? "http://localhost:5000");
     client.Timeout = TimeSpan.FromSeconds(30);
 });
+
+builder.Services.AddHttpClient<IFinanceiroHttpClient, FinanceiroHttpClient>(client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["Financeiro:BaseUrl"] ?? "http://localhost:5015");
+    client.Timeout = TimeSpan.FromSeconds(15);
+});
+
 builder.Services.AddHostedService<SincronizacaoPedidosService>();
 
 var app = builder.Build();

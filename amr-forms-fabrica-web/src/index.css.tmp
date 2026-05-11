@@ -1,0 +1,91 @@
+/* ============================================================
+   AMR Forms Fabrica — tema Bootstrap customizado
+   Edite as variaveis abaixo para ajustar o layout globalmente
+   ============================================================ */
+
+:root {
+  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  --amr-sidebar-bg:      #1e2235;
+  --amr-sidebar-hover:   #2a3050;
+  --amr-sidebar-active:  #3b4a7a;
+  --amr-sidebar-text:    #b0bec5;
+  --amr-sidebar-accent:  #f97316;
+  --amr-sidebar-width:   220px;
+  --amr-topbar-height:   56px;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  max-width: none;
+  text-align: left;
+  border: none;
+}
+
+.amr-wrapper {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ---------- Sidebar ---------- */
+.amr-sidebar {
+  width: var(--amr-sidebar-width);
+  min-width: var(--amr-sidebar-width);
+  background: var(--amr-sidebar-bg);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.amr-sidebar-brand {
+  padding: 1.1rem 1.25rem .9rem;
+  border-bottom: 1px solid rgba(255,255,255,.07);
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  text-decoration: none;
+  display: block;
+}
+
+.amr-sidebar-brand span { color: var(--amr-sidebar-accent); font-weight: 400; }
+
+.amr-sidebar-section {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: #546e7a;
+  padding: .85rem 1.25rem .3rem;
+}
+
+.amr-sidebar .nav-link {
+  color: var(--amr-sidebar-text);
+  font-size: 13.5px;
+  padding: .45rem 1.25rem;
+  border-radius: 0;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  transition: background .12s, color .12s;
+}
+
+.amr-sidebar .nav-link:hover  { background: var(--amr-sidebar-hover); color: #fff; }
+.amr-sidebar .nav-link.active { background: var(--amr-sidebar-active); color: #fff; font-weight: 500; }
+.amr-sidebar .nav-link i      { font-size: 16px; opacity: .8; }
+.amr-sidebar .nav-link.active i { opacity: 1; }
+
+/* ---------- Topbar ---------- */
+.amr-topbar {
+  height: var(--amr-topbar-height);
+  min-height: var(--amr-topbar-height);
+  background: #fff;
+  border-bottom: 1px solid #e9ecef;
+  display: flex;
+  align-items: center;
+  padding: 0 1.5rem;
+  gap: 10px;
+}
+
+.amr-topbar-title    { font-size: 15px; font-

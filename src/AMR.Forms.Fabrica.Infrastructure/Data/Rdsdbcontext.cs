@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using AMR.Forms.Fabrica.Domain.Entities;
 using AMR.Forms.Fabrica.Domain.Enums;
@@ -147,7 +147,7 @@ public class RdsDbContext(DbContextOptions<RdsDbContext> options) : DbContext(op
             e.Property(x => x.CodigoTipoOperacao).HasColumnName("CD_TIPO_OPERACAO");
             e.Property(x => x.CodigoPassoAtual).HasColumnName("CD_PASSO_ATUAL");
             e.Property(x => x.CodigoLotId).HasColumnName("CD_LOTID").HasMaxLength(50);
-            e.Property(x => x.DataFicha).HasColumnName("DT_FICHA").HasConversion(dateOnlyConverter);
+            e.Property(x => x.DataFicha).HasColumnName("DT_FICHA").HasConversion(dateOnlyNullableConverter);
             e.Property(x => x.DataSaida).HasColumnName("DT_SAIDA").HasConversion(dateOnlyNullableConverter);
             e.Property(x => x.DataInterfaceJde).HasColumnName("DT_INTERFACE_JDE").HasConversion(dateOnlyNullableConverter);
             e.Property(x => x.NomeMotorista).HasColumnName("NO_MOTORISTA").HasMaxLength(100);
@@ -173,7 +173,7 @@ public class RdsDbContext(DbContextOptions<RdsDbContext> options) : DbContext(op
             e.Property(x => x.NomeCliente).HasColumnName("NO_CLIENTE").HasMaxLength(200);
             e.Property(x => x.ChaveNfe).HasColumnName("CD_CHAVE_NFE").HasMaxLength(50);
             e.Property(x => x.Protocolo).HasColumnName("CD_PROTOCOLO").HasMaxLength(50);
-            e.Property(x => x.DataEmissao).HasColumnName("DT_EMISSAO_NF").HasConversion(dateOnlyConverter);
+            e.Property(x => x.DataEmissao).HasColumnName("DT_EMISSAO_NF").HasConversion(dateOnlyNullableConverter);
             e.Property(x => x.CnpjCliente).HasColumnName("CD_CNPJ_CLIENTE").HasMaxLength(20);
             e.Property(x => x.ValorTransmissao).HasColumnName("VL_TRANSMISSAO").HasPrecision(18, 4);
             e.Ignore(x => x.Ambiente);
@@ -224,9 +224,11 @@ public class RdsDbContext(DbContextOptions<RdsDbContext> options) : DbContext(op
             e.Property(x => x.CodigoFilial).HasColumnName("CD_FILIAL");
             e.Property(x => x.CodigoBusinessUnit).HasColumnName("CD_BUSINESS_UNIT").HasMaxLength(20);
             e.Property(x => x.CodigoAddressNumber).HasColumnName("CD_ADDRESS_NUMBER");
-            e.Property(x => x.DataPedido).HasColumnName("DT_PEDIDO");
+            e.Property(x => x.DataPedido).HasColumnName("DT_PEDIDO").HasConversion(dateOnlyNullableConverter);
             e.Ignore(x => x.Itens);
+            e.Ignore(x => x.QuantidadeTotalProdutos);
             e.Property(x => x.CodigoTipoDoctoJde).HasColumnName("CD_TIPO_DOCTO_JDE").HasMaxLength(10);
+            e.Property(x => x.SincronizadoEm).HasColumnName("SincronizadoEm");
         });
 
         // ── PEDIDO_ITEM ───────────────────────────────────────────────────────
