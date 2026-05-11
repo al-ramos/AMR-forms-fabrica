@@ -1,9 +1,9 @@
 import { useState, useCallback } from 'react';
-import { BrowserRouter, Routes, Route, NavLink, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, NavLink, useLocation, Navigate } from 'react-router-dom';
 import FichasPage from './FichasPage';
 import NovaFicha from './NovaFicha';
 import NotaFiscalPage from './NotaFiscalPage';
-import VeiculosPage from './VeiculosPage';
+import VeiculosPage from './pages/VeiculosPage';
 import { useFichas } from './useFichas';
 
 const NAV = [
@@ -229,7 +229,7 @@ export default function App() {
           <Topbar />
           <main className="amr-content">
             <Routes>
-              <Route path="/"         element={<DashboardPage />} />
+              <Route path="/" element={<Navigate to="/veiculos" replace />} />
               <Route path="/fichas"   element={<FichasRoute />} />
               <Route path="/nf"       element={<NotaFiscalPage />} />
               <Route path="/veiculos" element={<VeiculosPage />} />
@@ -242,3 +242,7 @@ export default function App() {
     </BrowserRouter>
   );
 }
+
+
+
+
