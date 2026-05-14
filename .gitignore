@@ -30,3 +30,11 @@ appsettings.Development.json
 appsettings.*.json
 !appsettings.json
 
+
+# SQLite WAL/journal files
+*.db-shm
+*.db-wal
+*.db
+
+# Claude Code
+.claude/
