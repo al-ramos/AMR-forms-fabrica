@@ -47,7 +47,8 @@ function ModalNovoVeiculo({ filiais, onSalvo, onFechar }: {
 
     const handleSalvar = async () => {
         const placaFmt = placa.toUpperCase().trim();
-        if (!placaFmt || !codigoFilial) return;
+        if (!placaFmt) { setErro("Placa é obrigatória."); return; }
+        if (!codigoFilial) { setErro("Selecione uma filial."); return; }
         setLoading(true);
         setErro(null);
         try {
@@ -97,14 +98,19 @@ function ModalNovoVeiculo({ filiais, onSalvo, onFechar }: {
                         <label style={{ fontSize: 11, fontWeight: 700, color: "#6B7280", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6, display: "block" }}>
                             Filial *
                         </label>
-                        <select value={codigoFilial} onChange={e => setCodigoFilial(e.target.value)}
-                            style={{ ...inputStyle, cursor: "pointer" }}>
-                            {filiais.map(f => (
-                                <option key={f.codigo} value={String(f.codigo)}>
-                                    {f.nome ?? `Filial ${f.codigo}`}
-                                </option>
-                            ))}
-                        </select>
+                        {filiais.length === 0
+                            ? <div style={{ fontSize: 12, color: "#EF4444", padding: "10px 14px", background: "#1F2937", borderRadius: 6, border: "1px solid #374151" }}>
+                                ⚠️ Nenhuma filial cadastrada. Reinicie a API para aplicar o seed.
+                              </div>
+                            : <select value={codigoFilial} onChange={e => setCodigoFilial(e.target.value)}
+                                style={{ ...inputStyle, cursor: "pointer" }}>
+                                {filiais.map(f => (
+                                    <option key={f.codigo} value={String(f.codigo)}>
+                                        {f.nome ?? `Filial ${f.codigo}`}
+                                    </option>
+                                ))}
+                              </select>
+                        }
                     </div>
                     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
                         <div>
@@ -131,10 +137,10 @@ function ModalNovoVeiculo({ filiais, onSalvo, onFechar }: {
                         background: "transparent", border: "1px solid #374151", borderRadius: 6,
                         color: "#9CA3AF", fontSize: 12, fontWeight: 600, padding: "8px 16px", cursor: "pointer",
                     }}>Cancelar</button>
-                    <button onClick={handleSalvar} disabled={!placa.trim() || loading} style={{
-                        background: !placa.trim() || loading ? "#374151" : "linear-gradient(135deg, #E85D04, #9A3412)",
+                    <button onClick={handleSalvar} disabled={!placa.trim() || !codigoFilial || loading} style={{
+                        background: !placa.trim() || !codigoFilial || loading ? "#374151" : "linear-gradient(135deg, #E85D04, #9A3412)",
                         border: "none", borderRadius: 6, color: "white", fontSize: 12, fontWeight: 700,
-                        padding: "8px 16px", cursor: !placa.trim() || loading ? "not-allowed" : "pointer",
+                        padding: "8px 16px", cursor: !placa.trim() || !codigoFilial || loading ? "not-allowed" : "pointer",
                         display: "flex", alignItems: "center", gap: 6,
                     }}>
                         {loading ? <><Icon d={icons.refresh} size={12} /> Salvando...</> : "✓ Salvar"}

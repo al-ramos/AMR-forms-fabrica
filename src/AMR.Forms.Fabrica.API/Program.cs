@@ -1,4 +1,5 @@
 using AMR.Forms.Fabrica.API.Services;
+using AMR.Forms.Fabrica.Domain.Entities;
 using AMR.Forms.Fabrica.Domain.Interfaces;
 using AMR.Forms.Fabrica.Infrastructure.ExternalServices;
 using AMR.Forms.Fabrica.Application;
@@ -44,11 +45,23 @@ builder.Services.AddHostedService<SincronizacaoPedidosService>();
 
 var app = builder.Build();
 
-// ── Auto Migration (SQLite) ───────────────────────────────────────────────────
+// ── Auto Migration + Seed (SQLite) ───────────────────────────────────────────
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<RdsDbContext>();
     db.Database.Migrate();
+
+    // Seed de filiais padrão se a tabela estiver vazia
+    if (!db.Filiais.Any())
+    {
+        db.Filiais.AddRange(
+            new Filial(1, "Filial 01 — Matriz",    null, null),
+            new Filial(2, "Filial 02 — Fábrica",   null, null),
+            new Filial(3, "Filial 03 — Depósito",  null, null)
+        );
+        db.SaveChanges();
+        app.Logger.LogInformation("Seed: 3 filiais padrão criadas.");
+    }
 }
 
 // ── Pipeline ──────────────────────────────────────────────────────────────────
