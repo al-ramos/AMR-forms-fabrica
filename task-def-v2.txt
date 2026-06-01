@@ -1,10 +1,10 @@
 {
     "taskDefinition": {
-        "taskDefinitionArn": "arn:aws:ecs:sa-east-1:426222909134:task-definition/rds-forms-fabrica-api:2",
+        "taskDefinitionArn": "arn:aws:ecs:sa-east-1:474874558993:task-definition/rds-forms-fabrica-api:2",
         "containerDefinitions": [
             {
                 "name": "api",
-                "image": "426222909134.dkr.ecr.sa-east-1.amazonaws.com/rds-forms-fabrica-api:latest",
+                "image": "474874558993.dkr.ecr.sa-east-1.amazonaws.com/rds-forms-fabrica-api:latest",
                 "cpu": 0,
                 "portMappings": [
                     {
@@ -30,7 +30,7 @@
             }
         ],
         "family": "rds-forms-fabrica-api",
-        "executionRoleArn": "arn:aws:iam::426222909134:role/ecsTaskExecutionRole",
+        "executionRoleArn": "arn:aws:iam::474874558993:role/ecsTaskExecutionRole",
         "networkMode": "awsvpc",
         "revision": 2,
         "volumes": [],
@@ -73,6 +73,6 @@
         "cpu": "256",
         "memory": "512",
         "registeredAt": "2026-04-25T16:31:16.883000-03:00",
-        "registeredBy": "arn:aws:iam::426222909134:user/dev-pessoal"
+        "registeredBy": "arn:aws:iam::474874558993:user/dev-pessoal"
     }
 }

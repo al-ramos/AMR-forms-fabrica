@@ -1,6 +1,6 @@
 [{
   "name": "web",
-  "image": "426222909134.dkr.ecr.sa-east-1.amazonaws.com/rds-forms-fabrica-web:latest",
+  "image": "474874558993.dkr.ecr.sa-east-1.amazonaws.com/rds-forms-fabrica-web:latest",
   "portMappings": [{"containerPort": 3000, "protocol": "tcp"}],
   "essential": true,
   "logConfiguration": {

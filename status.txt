@@ -1,9 +1,9 @@
 {
     "services": [
         {
-            "serviceArn": "arn:aws:ecs:sa-east-1:426222909134:service/rds-forms-fabrica/rds-forms-fabrica-api",
+            "serviceArn": "arn:aws:ecs:sa-east-1:474874558993:service/rds-forms-fabrica/rds-forms-fabrica-api",
             "serviceName": "rds-forms-fabrica-api",
-            "clusterArn": "arn:aws:ecs:sa-east-1:426222909134:cluster/rds-forms-fabrica",
+            "clusterArn": "arn:aws:ecs:sa-east-1:474874558993:cluster/rds-forms-fabrica",
             "loadBalancers": [],
             "serviceRegistries": [],
             "status": "INACTIVE",
@@ -13,7 +13,7 @@
             "launchType": "FARGATE",
             "platformVersion": "LATEST",
             "platformFamily": "Linux",
-            "taskDefinition": "arn:aws:ecs:sa-east-1:426222909134:task-definition/rds-forms-fabrica-api:1",
+            "taskDefinition": "arn:aws:ecs:sa-east-1:474874558993:task-definition/rds-forms-fabrica-api:1",
             "deploymentConfiguration": {
                 "deploymentCircuitBreaker": {
                     "enable": false,
@@ -28,7 +28,7 @@
                 {
                     "id": "ecs-svc/8716708283906844505",
                     "status": "PRIMARY",
-                    "taskDefinition": "arn:aws:ecs:sa-east-1:426222909134:task-definition/rds-forms-fabrica-api:1",
+                    "taskDefinition": "arn:aws:ecs:sa-east-1:474874558993:task-definition/rds-forms-fabrica-api:1",
                     "desiredCount": 0,
                     "pendingCount": 0,
                     "runningCount": 0,
@@ -55,12 +55,12 @@
                     "rolloutStateReason": "ECS deployment ecs-svc/8716708283906844505 completed."
                 }
             ],
-            "roleArn": "arn:aws:iam::426222909134:role/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS",
+            "roleArn": "arn:aws:iam::474874558993:role/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS",
             "events": [],
             "createdAt": "2026-04-23T15:55:29.964000-03:00",
             "currentServiceRevisions": [
                 {
-                    "arn": "arn:aws:ecs:sa-east-1:426222909134:service-revision/rds-forms-fabrica/rds-forms-fabrica-api/8716708283906844505",
+                    "arn": "arn:aws:ecs:sa-east-1:474874558993:service-revision/rds-forms-fabrica/rds-forms-fabrica-api/8716708283906844505",
                     "requestedTaskCount": 0,
                     "runningTaskCount": 0,
                     "pendingTaskCount": 0
@@ -86,7 +86,7 @@
             "deploymentController": {
                 "type": "ECS"
             },
-            "createdBy": "arn:aws:iam::426222909134:user/dev-pessoal",
+            "createdBy": "arn:aws:iam::474874558993:user/dev-pessoal",
             "enableECSManagedTags": false,
             "propagateTags": "NONE",
             "enableExecuteCommand": false,

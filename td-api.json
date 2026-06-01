@@ -1,6 +1,6 @@
 [{
   "name": "api",
-  "image": "426222909134.dkr.ecr.sa-east-1.amazonaws.com/rds-forms-fabrica-api:latest",
+  "image": "474874558993.dkr.ecr.sa-east-1.amazonaws.com/rds-forms-fabrica-api:latest",
   "portMappings": [{"containerPort": 5186, "protocol": "tcp"}],
   "essential": true,
   "logConfiguration": {

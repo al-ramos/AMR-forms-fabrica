@@ -37,15 +37,15 @@
                 }
             ],
             "availabilityZone": "sa-east-1c",
-            "clusterArn": "arn:aws:ecs:sa-east-1:426222909134:cluster/rds-forms-fabrica",
+            "clusterArn": "arn:aws:ecs:sa-east-1:474874558993:cluster/rds-forms-fabrica",
             "connectivity": "CONNECTED",
             "connectivityAt": "2026-04-25T16:31:59.955000-03:00",
             "containers": [
                 {
-                    "containerArn": "arn:aws:ecs:sa-east-1:426222909134:container/rds-forms-fabrica/cd01f84dc8ed4d9da6899a491a1808ae/11f533e0-b996-47df-bd69-389129a006eb",
-                    "taskArn": "arn:aws:ecs:sa-east-1:426222909134:task/rds-forms-fabrica/cd01f84dc8ed4d9da6899a491a1808ae",
+                    "containerArn": "arn:aws:ecs:sa-east-1:474874558993:container/rds-forms-fabrica/cd01f84dc8ed4d9da6899a491a1808ae/11f533e0-b996-47df-bd69-389129a006eb",
+                    "taskArn": "arn:aws:ecs:sa-east-1:474874558993:task/rds-forms-fabrica/cd01f84dc8ed4d9da6899a491a1808ae",
                     "name": "api",
-                    "image": "426222909134.dkr.ecr.sa-east-1.amazonaws.com/rds-forms-fabrica-api:latest",
+                    "image": "474874558993.dkr.ecr.sa-east-1.amazonaws.com/rds-forms-fabrica-api:latest",
                     "imageDigest": "sha256:9e54646717769f8b57b6e0a1c9980c8a47e24fc0c838091702f1c36bffda971b",
                     "runtimeId": "cd01f84dc8ed4d9da6899a491a1808ae-0946514567",
                     "lastStatus": "RUNNING",
@@ -84,8 +84,8 @@
             "startedAt": "2026-04-25T16:32:17.064000-03:00",
             "startedBy": "ecs-svc/4681786224002900399",
             "tags": [],
-            "taskArn": "arn:aws:ecs:sa-east-1:426222909134:task/rds-forms-fabrica/cd01f84dc8ed4d9da6899a491a1808ae",
-            "taskDefinitionArn": "arn:aws:ecs:sa-east-1:426222909134:task-definition/rds-forms-fabrica-api:2",
+            "taskArn": "arn:aws:ecs:sa-east-1:474874558993:task/rds-forms-fabrica/cd01f84dc8ed4d9da6899a491a1808ae",
+            "taskDefinitionArn": "arn:aws:ecs:sa-east-1:474874558993:task-definition/rds-forms-fabrica-api:2",
             "version": 4,
             "ephemeralStorage": {
                 "sizeInGiB": 20
