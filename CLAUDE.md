@@ -144,3 +144,65 @@ Push para `main` dispara `.github/workflows/deploy-aws.yml`:
 | AMR-Core        | AMR-Core                | 5000 / 5175 |
 | AMR-Financeiro  | AMR-Financeiro          | 5015        |
 | AMR-Fábrica     | **este repo**           | 5186 / 5174 |
+
+---
+
+## Estado do Projeto — Sprint 6 ativo (02/06–24/06/2026)
+
+- Infra Terraform unificada provisionada na AWS
+- CI/CD GitHub Actions funcionando (deploy-aws.yml)
+- 4 testes unitários passando (SincronizarPedidosHandler)
+- **Sprint 6 entregues no AMR-Fábrica:**
+  - AMR-Fábrica re-deploy confirmado em produção ✅ (02/06/2026)
+  - CLAUDE.md criado — contexto persistente para Claude Code ✅ (03/06/2026 · `868c3cd`)
+
+---
+
+## Protocolo de Encerramento de Card
+
+Ao concluir qualquer card/tarefa, executar nesta ordem:
+
+1. **Git** — commit descritivo + `git push -u origin <branch>`
+2. **Notion card** — atualizar `Entrega` para a data real e adicionar referência do commit no conteúdo da página
+3. **Kanban** — atualizar a propriedade `Status` do card no Notion para `✅ Concluído` (via `update_properties`)
+4. **CLAUDE.md** — atualizar seção `Estado do Projeto` se houve mudança relevante de contexto
+5. **Próximo Card** — identificar o próximo card no Backlog, atualizar `Status` para `▶️ Em andamento` no Notion e atualizar a seção `## Próximo Card` abaixo
+6. **Merge para main** — fazer merge do branch de feature para `main` e push, garantindo que o CLAUDE.md atualizado esteja disponível para a próxima sessão
+
+---
+
+## Protocolo de Encerramento de Sessão
+
+Disparado quando o usuário disser **"encerrar sessão"** (ou "fechar sessão", "fim do dia", "encerrando").
+
+Executar em ordem:
+
+1. Consolidar todos os cards concluídos na sessão (título, commit, link Notion)
+2. **Kanban** — atualizar `Status` de todos os cards trabalhados na sessão (concluídos → `✅ Concluído`, próximo → `▶️ Em andamento`)
+3. Confirmar o Próximo Card atualizado no `CLAUDE.md`
+4. Criar **1 evento no Google Calendar** com:
+   - Título: `AMR-Fábrica ✅ Sessão DD/MM/YYYY`
+   - Data/hora: agora (duração 30 min)
+   - Descrição: cards entregues + commits + próximo card
+   - Reminder: e-mail 0 minutos antes (notificação imediata)
+
+> Apenas 1 chamada de Calendar por sessão — independente de quantos cards foram feitos.
+
+---
+
+## Próximo Card
+
+Sprint 6 do AMR-Fábrica **100% concluído**. Não há próximo card neste repositório para o Sprint 6.
+Próximo sprint: **Sprint 7 — AMR CRM** (25/06 — 08/07/2026) em repositório diferente.
+
+---
+
+## Troubleshooting Frequente
+
+| Problema | Solução |
+|---|---|
+| Porta errada no backend | Verificar `launchSettings.json` → `applicationUrl: http://localhost:5186` |
+| CORS bloqueando frontend | `appsettings.json` → `AllowAnyOrigin` já configurado |
+| MediatR não resolve handlers | Usar native registration (`.AddMediatR(...)`), remover `MediatR.Extensions` |
+| Vite proxy não funciona | Atualizar `vite.config.ts` com a URL correta do backend |
+| EF Core PendingModelChangesWarning | Snapshot com tipos SQL Server vs SQLite — suprimido via `SuppressOnlyWarningsThatWouldBeErrors` |
