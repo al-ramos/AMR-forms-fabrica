@@ -57,3 +57,31 @@ jobs:
             **/TestResults/**/coverage.cobertura.xml
             TestResults/CoverageReport/
           retention-days: 14
+
+  frontend-test:
+    name: Frontend Tests (Vitest)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+          cache-dependency-path: amr-forms-fabrica-web/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: amr-forms-fabrica-web
+
+      - name: Run Vitest
+        run: npm run test:run
+        working-directory: amr-forms-fabrica-web
+
+      - name: Run coverage
+        run: npm run coverage -- --reporter=json-summary --outputFile=./coverage/coverage-summary.json 2>/dev/null || npm run coverage
+        working-directory: amr-forms-fabrica-web
+        continue-on-error: true
