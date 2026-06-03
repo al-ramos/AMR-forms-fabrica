@@ -155,6 +155,11 @@ Push para `main` dispara `.github/workflows/deploy-aws.yml`:
 - **Sprint 6 entregues no AMR-Fábrica:**
   - AMR-Fábrica re-deploy confirmado em produção ✅ (02/06/2026)
   - CLAUDE.md criado — contexto persistente para Claude Code ✅ (03/06/2026 · `868c3cd`)
+  - Vitest + RTL — 10 testes frontend (VeiculosPage, NotaFiscalPage) ✅ (03/06/2026 · `8c2205a`)
+  - CI frontend — job `frontend-test` no ci.yml ✅ (03/06/2026 · `9f9a999`)
+  - Rate limiting 100 req/min por IP ✅ (03/06/2026 · `a41c9a6`)
+  - Security headers middleware (OWASP) ✅ (03/06/2026 · `e55ca68`)
+  - Serilog logs estruturados + request logging ✅ (03/06/2026 · `9766cce`)
 
 ---
 
