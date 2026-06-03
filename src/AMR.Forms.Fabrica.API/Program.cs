@@ -6,8 +6,19 @@ using AMR.Forms.Fabrica.Application;
 using AMR.Forms.Fabrica.Infrastructure;
 using AMR.Forms.Fabrica.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// ── Serilog como provider de log ──────────────────────────────────────────────
+builder.Host.UseSerilog((ctx, cfg) => cfg
+    .ReadFrom.Configuration(ctx.Configuration)
+    .Enrich.FromLogContext()
+    .Enrich.WithProperty("Application", "AMR.Forms.Fabrica.API")
+    .WriteTo.Console(
+        outputTemplate: ctx.HostingEnvironment.IsProduction()
+            ? "[{Timestamp:o} {Level:u3}] {SourceContext}: {Message:lj} {Properties:j}{NewLine}{Exception}"
+            : "[{Timestamp:HH:mm:ss} {Level:u3}] {SourceContext}: {Message:lj}{NewLine}{Exception}"));
 
 // ── Rate Limiting — 100 req/min por IP ────────────────────────────────────────
 builder.Services.AddRateLimiter(options =>
@@ -95,6 +106,12 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 // Redirect raiz para Swagger em dev (facilita preview e testes locais)
 if (app.Environment.IsDevelopment())
     app.MapGet("/", () => Results.Redirect("/swagger/index.html")).ExcludeFromDescription();
+
+// ── Serilog request logging ───────────────────────────────────────────────────
+app.UseSerilogRequestLogging(opts =>
+{
+    opts.MessageTemplate = "HTTP {RequestMethod} {RequestPath} → {StatusCode} ({Elapsed:0.000}ms)";
+});
 
 // ── Security Headers (OWASP) ──────────────────────────────────────────────────
 app.Use(async (ctx, next) =>
