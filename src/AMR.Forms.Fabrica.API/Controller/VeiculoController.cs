@@ -7,6 +7,8 @@ namespace AMR.Forms.Fabrica.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+[ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
 public class VeiculoController(IMediator mediator) : ControllerBase
 {
     [HttpGet]
@@ -22,6 +24,7 @@ public class VeiculoController(IMediator mediator) : ControllerBase
         => Ok(await mediator.Send(command, ct));
 
     [HttpPut("{placa}")]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Editar(string placa, [FromBody] EditarVeiculoCommand command, CancellationToken ct)
         => Ok(await mediator.Send(command with { Placa = placa }, ct));
 }

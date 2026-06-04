@@ -6,6 +6,8 @@ namespace AMR.Forms.Fabrica.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+[ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
 public class PedidoController(IMediator mediator) : ControllerBase
 {
     // GET api/Pedido?cdFilial=1
