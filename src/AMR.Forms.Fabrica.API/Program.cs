@@ -1,3 +1,4 @@
+using AMR.Forms.Fabrica.API.Middleware;
 using AMR.Forms.Fabrica.API.Services;
 using AMR.Forms.Fabrica.Domain.Entities;
 using AMR.Forms.Fabrica.Domain.Interfaces;
@@ -43,6 +44,7 @@ builder.Services.AddRateLimiter(options =>
 
 // ── Serviços ──────────────────────────────────────────────────────────────────
 builder.Services.AddControllers();
+builder.Services.AddProblemDetails();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -97,6 +99,8 @@ using (var scope = app.Services.CreateScope())
 }
 
 // ── Pipeline ──────────────────────────────────────────────────────────────────
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
 if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
     app.UseSwagger();
