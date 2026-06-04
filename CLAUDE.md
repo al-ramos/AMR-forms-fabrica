@@ -161,6 +161,7 @@ Push para `main` dispara `.github/workflows/deploy-aws.yml`:
   - Security headers middleware (OWASP) ✅ (03/06/2026 · `e55ca68`)
   - Serilog logs estruturados + request logging ✅ (03/06/2026 · `9766cce`)
   - ErrorHandling ProblemDetails RFC 7807 — middleware global + ResultExtensions ✅ (04/06/2026 · `77a5d8c`)
+  - Segurança IP — varredura secrets + AWS Account ID → `${{ secrets.AWS_ACCOUNT_ID }}` + .gitignore + LICENSE BSL 1.1 ✅ (04/06/2026 · `fdf3658`)
 
 ---
 
