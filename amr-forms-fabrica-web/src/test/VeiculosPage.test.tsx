@@ -1,6 +1,6 @@
 import { render, screen, waitFor, fireEvent } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import VeiculosPage from '../VeiculosPage'
+import VeiculosPage from '../pages/VeiculosPage'
 
 const veiculosMock = [
   { placa: 'ABC-1234', codigoFilial: 1, ufVeiculo: 'SP', codigoRntc: 'RNT001' },

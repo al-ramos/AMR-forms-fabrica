@@ -1,9 +1,9 @@
 # 🏭 AMR-Fábrica
 
-> Módulo de chão de fábrica do ecossistema AMR SYSTEM — fichas de produção, ordens de serviço, inspeções e rastreabilidade de peças.
+> Módulo MES de chão de fábrica do ecossistema AMR SYSTEM — fichas de produção, notas fiscais, veículos, pedidos e estrutura organizacional (filiais, departamentos, estações).
 
-[![CI](https://github.com/alexsandro-ramos/AMR.Forms.Fabrica/actions/workflows/ci.yml/badge.svg)](https://github.com/alexsandro-ramos/AMR.Forms.Fabrica/actions/workflows/ci.yml)
-[![Deploy AWS](https://github.com/alexsandro-ramos/AMR.Forms.Fabrica/actions/workflows/deploy-aws.yml/badge.svg)](https://github.com/alexsandro-ramos/AMR.Forms.Fabrica/actions/workflows/deploy-aws.yml)
+[![CI](https://github.com/al-ramos/AMR-forms-fabrica/actions/workflows/ci.yml/badge.svg)](https://github.com/al-ramos/AMR-forms-fabrica/actions/workflows/ci.yml)
+[![Deploy AWS](https://github.com/al-ramos/AMR-forms-fabrica/actions/workflows/deploy-aws.yml/badge.svg)](https://github.com/al-ramos/AMR-forms-fabrica/actions/workflows/deploy-aws.yml)
 ![.NET 8](https://img.shields.io/badge/.NET-8.0-512BD4?logo=dotnet)
 ![React](https://img.shields.io/badge/React-18-61DAFB?logo=react)
 
@@ -13,11 +13,14 @@ Parte do [AMR SYSTEM](../README.md) — veja a documentação do ecossistema com
 
 ## ✨ Funcionalidades
 
-- **Fichas de Produção** — registro e acompanhamento de ordens por equipamento
-- **Inspeções** — formulários de inspeção com checklist e resultado (OK / NOK)
-- **Ordens de Reparo** — abertura, acompanhamento e encerramento com histórico
-- **Rastreabilidade** — vinculação peça → ficha → inspeção → reparo
-- **Integração** — consome AMR-Core (produtos/peças) via HTTP interno
+- **Fichas de Produção** — registro e acompanhamento de ordens por equipamento, incluindo balança e detalhes de carga
+- **Notas Fiscais** — emissão, detalhamento e mensagens fiscais por operação
+- **Veículos** — cadastro e controle de veículos de expedição/recepção
+- **Pedidos de Fábrica** — pedidos com itens, vinculados a tipos de operação configuráveis
+- **Estrutura Organizacional** — Filiais, Departamentos, Business Units e Estações de trabalho
+- **Tipos de Operação** — configuração de passos e parâmetros por tipo de operação
+- **Integração Financeiro** — saída de ficha → ContaPagar; NF transmitida → ContaReceber (HTTP fail-safe)
+- **Integração Core** — recebe pedidos via polling (SincronizacaoPedidosService, 5 min)
 
 ---
 
