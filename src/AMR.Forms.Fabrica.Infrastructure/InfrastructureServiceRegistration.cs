@@ -35,6 +35,8 @@ public static class InfrastructureServiceRegistration
         services.AddScoped<INotaFiscalDetalheRepository, NotaFiscalDetalheRepository>();
         services.AddScoped<IBomRepository, BomRepository>();
         services.AddScoped<IProdutoBomRepository, ProdutoBomRepository>();
+        services.AddScoped<IOrdemProducaoRepository, OrdemProducaoRepository>();
+        services.AddScoped<IRastreabilidadeRepository, RastreabilidadeRepository>();
 
         return services;
     }

@@ -26,6 +26,8 @@ public class RdsDbContext(DbContextOptions<RdsDbContext> options) : DbContext(op
     public DbSet<LogSistema> LogsSistema => Set<LogSistema>();
     public DbSet<Departamento> Departamentos => Set<Departamento>();
     public DbSet<BomItem> BomItens => Set<BomItem>();
+    public DbSet<OrdemProducao> OrdensProducao => Set<OrdemProducao>();
+    public DbSet<RastreabilidadeItem> RastreabilidadeItens => Set<RastreabilidadeItem>();
 
     public async Task<int> CommitAsync(CancellationToken ct = default)
         => await SaveChangesAsync(ct);
@@ -159,6 +161,48 @@ public class RdsDbContext(DbContextOptions<RdsDbContext> options) : DbContext(op
             e.Property(x => x.AtualizadoEm).HasColumnName("DT_ATUALIZADO_EM");
             e.Ignore(x => x.QuantidadeLiquida);
             e.HasIndex(x => new { x.CodigoProdutoPai, x.CodigoProdutoFilho }).IsUnique();
+        });
+
+        // ── ORDEM_PRODUCAO ────────────────────────────────────────────────────
+        mb.Entity<OrdemProducao>(e =>
+        {
+            e.ToTable("ORDEM_PRODUCAO");
+            e.HasKey(x => x.Id);
+            e.Property(x => x.Id).HasColumnName("ID_ORDEM_PRODUCAO").ValueGeneratedOnAdd();
+            e.Property(x => x.Numero).HasColumnName("NR_ORDEM").HasMaxLength(30);
+            e.Property(x => x.CodigoProduto).HasColumnName("CD_PRODUTO");
+            e.Property(x => x.CodigoFilial).HasColumnName("CD_FILIAL");
+            e.Property(x => x.QuantidadePlanejada).HasColumnName("QT_PLANEJADA").HasPrecision(18, 4);
+            e.Property(x => x.QuantidadeProduzida).HasColumnName("QT_PRODUZIDA").HasPrecision(18, 4).HasDefaultValue(0m);
+            e.Property(x => x.QuantidadeRejeitada).HasColumnName("QT_REJEITADA").HasPrecision(18, 4).HasDefaultValue(0m);
+            e.Property(x => x.Status).HasColumnName("CD_STATUS").HasConversion<string>().HasMaxLength(20);
+            e.Property(x => x.DataAbertura).HasColumnName("DT_ABERTURA");
+            e.Property(x => x.DataPrevistaFim).HasColumnName("DT_PREVISTA_FIM");
+            e.Property(x => x.DataFechamento).HasColumnName("DT_FECHAMENTO");
+            e.Property(x => x.ObservacaoGeral).HasColumnName("DS_OBSERVACAO").HasMaxLength(500);
+            e.Property(x => x.MotivoCancelamento).HasColumnName("DS_MOTIVO_CANCELAMENTO").HasMaxLength(500);
+            e.Ignore(x => x.QuantidadeRestante);
+            e.Ignore(x => x.PercentualConclusao);
+            e.HasIndex(x => x.Numero).IsUnique();
+            e.HasMany(o => o.Rastreabilidade).WithOne(r => r.OrdemProducao).HasForeignKey(r => r.OrdemProducaoId);
+        });
+
+        // ── RASTREABILIDADE_ITEM ──────────────────────────────────────────────
+        mb.Entity<RastreabilidadeItem>(e =>
+        {
+            e.ToTable("RASTREABILIDADE_ITEM");
+            e.HasKey(x => x.Id);
+            e.Property(x => x.Id).HasColumnName("ID_RASTREABILIDADE").ValueGeneratedOnAdd();
+            e.Property(x => x.OrdemProducaoId).HasColumnName("ID_ORDEM_PRODUCAO");
+            e.Property(x => x.CodigoProduto).HasColumnName("CD_PRODUTO");
+            e.Property(x => x.Lote).HasColumnName("CD_LOTE").HasMaxLength(50);
+            e.Property(x => x.Quantidade).HasColumnName("QT_QUANTIDADE").HasPrecision(18, 4);
+            e.Property(x => x.TipoMovimento).HasColumnName("CD_TIPO_MOVIMENTO").HasConversion<string>().HasMaxLength(20);
+            e.Property(x => x.DataHoraRegistro).HasColumnName("DT_REGISTRO");
+            e.Property(x => x.CodigoOperador).HasColumnName("CD_OPERADOR").HasMaxLength(20);
+            e.Property(x => x.Observacao).HasColumnName("DS_OBSERVACAO").HasMaxLength(300);
+            e.HasIndex(x => x.Lote);
+            e.HasIndex(x => x.OrdemProducaoId);
         });
 
         // ── FICHA ─────────────────────────────────────────────────────────────

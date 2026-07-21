@@ -110,3 +110,20 @@ public interface IProdutoBomRepository : IProdutoRepository
     Task<IEnumerable<Produto>> ListarFabricadosAsync();
     Task AtualizarDadosBomAsync(Produto produto);
 }
+
+public interface IOrdemProducaoRepository
+{
+    Task<OrdemProducao?> ObterPorIdAsync(int id);
+    Task<OrdemProducao?> ObterPorNumeroAsync(string numero);
+    Task<IEnumerable<OrdemProducao>> ListarPorFilialAsync(int codigoFilial, StatusOrdemProducao? status = null);
+    Task AdicionarAsync(OrdemProducao op);
+    Task AtualizarAsync(OrdemProducao op);
+    Task<bool> NumeroJaExisteAsync(string numero);
+}
+
+public interface IRastreabilidadeRepository
+{
+    Task<IEnumerable<RastreabilidadeItem>> ListarPorOrdemProducaoAsync(int ordemProducaoId);
+    Task<IEnumerable<RastreabilidadeItem>> ListarPorLoteAsync(string lote);
+    Task AdicionarAsync(RastreabilidadeItem item);
+}
