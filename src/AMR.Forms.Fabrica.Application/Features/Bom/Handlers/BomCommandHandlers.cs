@@ -30,15 +30,11 @@ public class AdicionarBomItemHandler(IBomRepository bomRepo, IProdutoBomReposito
         if (existente is not null && existente.Ativo)
             return Result<int>.Falha("Este componente já existe na estrutura BOM do produto pai. Use a atualização para modificar quantidade.");
 
-        // Calcular nível: pai nível 1 → filhos nível 2, etc.
-        var itensPai = await bomRepo.ListarItensPorProdutoPaiAsync(request.CodigoProdutoPai);
-        int nivel = itensPai.Any() ? itensPai.Max(i => i.Nivel) : 1;
-
         var item = new BomItem(
             request.CodigoProdutoPai,
             request.CodigoProdutoFilho,
             request.Quantidade,
-            nivel + 1,
+            1, // nível relativo; profundidade real calculada durante a consulta da árvore
             request.PercentualPerda
         );
 

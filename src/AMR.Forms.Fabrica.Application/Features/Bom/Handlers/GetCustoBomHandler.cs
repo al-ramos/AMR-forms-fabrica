@@ -1,5 +1,6 @@
 using AMR.Forms.Fabrica.Application.Features.Bom.DTOs;
 using AMR.Forms.Fabrica.Application.Features.Bom.Queries;
+using AMR.Forms.Fabrica.Domain.Entities;
 using AMR.Forms.Fabrica.Domain.Interfaces;
 using MediatR;
 
@@ -38,7 +39,7 @@ public class GetCustoBomHandler(IBomRepository bomRepo, IProdutoBomRepository pr
 
             decimal custoUnitario;
 
-            if (prodFilho.TipoProduto == "Fabricado")
+            if (prodFilho.TipoProduto == TiposProduto.Fabricado)
             {
                 // Bottom-up: custo do fabricado = soma dos seus componentes
                 var (custoFilho, _) = await CalcularCustoAsync(item.CodigoProdutoFilho, nivel + 1, ct);

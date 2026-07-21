@@ -67,6 +67,9 @@ public class OrdemProducao
             throw new InvalidOperationException("OP deve estar Em Produção para registrar produção.");
         if (quantidade <= 0)
             throw new ArgumentException("Quantidade deve ser positiva.", nameof(quantidade));
+        if (quantidade > QuantidadeRestante)
+            throw new InvalidOperationException(
+                $"Quantidade informada ({quantidade:F2}) supera o restante da OP ({QuantidadeRestante:F2}). Ajuste a quantidade ou conclua a OP.");
 
         QuantidadeProduzida += quantidade;
     }
@@ -77,6 +80,9 @@ public class OrdemProducao
             throw new InvalidOperationException("OP deve estar Em Produção para registrar rejeição.");
         if (quantidade <= 0)
             throw new ArgumentException("Quantidade deve ser positiva.", nameof(quantidade));
+        if (quantidade > QuantidadeRestante)
+            throw new InvalidOperationException(
+                $"Quantidade de rejeição ({quantidade:F2}) supera o restante da OP ({QuantidadeRestante:F2}).");
 
         QuantidadeRejeitada += quantidade;
     }

@@ -31,7 +31,7 @@ public class LiberarOpHandler(IOrdemProducaoRepository repo, IUnitOfWork uow)
     {
         var op = await repo.ObterPorIdAsync(request.Id);
         if (op is null) return Result.Falha($"OP {request.Id} não encontrada.");
-        try { op.Liberar(); } catch (Exception ex) { return Result.Falha(ex.Message); }
+        try { op.Liberar(); } catch (InvalidOperationException ex) { return Result.Falha(ex.Message); }
         await repo.AtualizarAsync(op);
         await uow.SaveChangesAsync(ct);
         return Result.Ok();
@@ -45,7 +45,7 @@ public class IniciarProducaoHandler(IOrdemProducaoRepository repo, IUnitOfWork u
     {
         var op = await repo.ObterPorIdAsync(request.Id);
         if (op is null) return Result.Falha($"OP {request.Id} não encontrada.");
-        try { op.IniciarProducao(); } catch (Exception ex) { return Result.Falha(ex.Message); }
+        try { op.IniciarProducao(); } catch (InvalidOperationException ex) { return Result.Falha(ex.Message); }
         await repo.AtualizarAsync(op);
         await uow.SaveChangesAsync(ct);
         return Result.Ok();
@@ -60,7 +60,7 @@ public class RegistrarProducaoHandler(IOrdemProducaoRepository opRepo, IRastreab
         var op = await opRepo.ObterPorIdAsync(request.OrdemProducaoId);
         if (op is null) return Result.Falha($"OP {request.OrdemProducaoId} não encontrada.");
 
-        try { op.RegistrarProducao(request.Quantidade); } catch (Exception ex) { return Result.Falha(ex.Message); }
+        try { op.RegistrarProducao(request.Quantidade); } catch (InvalidOperationException ex) { return Result.Falha(ex.Message); }
 
         var rast = new RastreabilidadeItem(
             op.Id, op.CodigoProduto, request.Lote, request.Quantidade,
@@ -81,7 +81,7 @@ public class RegistrarRejeicaoHandler(IOrdemProducaoRepository opRepo, IRastreab
         var op = await opRepo.ObterPorIdAsync(request.OrdemProducaoId);
         if (op is null) return Result.Falha($"OP {request.OrdemProducaoId} não encontrada.");
 
-        try { op.RegistrarRejeicao(request.Quantidade); } catch (Exception ex) { return Result.Falha(ex.Message); }
+        try { op.RegistrarRejeicao(request.Quantidade); } catch (InvalidOperationException ex) { return Result.Falha(ex.Message); }
 
         var rast = new RastreabilidadeItem(
             op.Id, op.CodigoProduto, request.Lote, request.Quantidade,
@@ -101,7 +101,7 @@ public class ConcluirOpHandler(IOrdemProducaoRepository repo, IUnitOfWork uow)
     {
         var op = await repo.ObterPorIdAsync(request.Id);
         if (op is null) return Result.Falha($"OP {request.Id} não encontrada.");
-        try { op.Concluir(); } catch (Exception ex) { return Result.Falha(ex.Message); }
+        try { op.Concluir(); } catch (InvalidOperationException ex) { return Result.Falha(ex.Message); }
         await repo.AtualizarAsync(op);
         await uow.SaveChangesAsync(ct);
         return Result.Ok();
@@ -115,7 +115,7 @@ public class CancelarOpHandler(IOrdemProducaoRepository repo, IUnitOfWork uow)
     {
         var op = await repo.ObterPorIdAsync(request.Id);
         if (op is null) return Result.Falha($"OP {request.Id} não encontrada.");
-        try { op.Cancelar(request.Motivo); } catch (Exception ex) { return Result.Falha(ex.Message); }
+        try { op.Cancelar(request.Motivo); } catch (InvalidOperationException ex) { return Result.Falha(ex.Message); }
         await repo.AtualizarAsync(op);
         await uow.SaveChangesAsync(ct);
         return Result.Ok();

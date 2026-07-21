@@ -1,5 +1,6 @@
 using AMR.Forms.Fabrica.Application.Features.Bom.DTOs;
 using AMR.Forms.Fabrica.Application.Features.Bom.Queries;
+using AMR.Forms.Fabrica.Domain.Entities;
 using AMR.Forms.Fabrica.Domain.Interfaces;
 using MediatR;
 
@@ -10,13 +11,14 @@ public class GetExplosaoMaterialHandler(IBomRepository bomRepo, IProdutoBomRepos
 {
     public async Task<IReadOnlyList<ExplosaoMaterialDto>> Handle(GetExplosaoMaterialQuery request, CancellationToken ct)
     {
-        var resultado = new List<ExplosaoMaterialDto>();
-        await ExplodirAsync(request.CodigoProduto, request.QuantidadeFabricar, 1, resultado, ct);
-        return resultado.AsReadOnly();
+        // Dictionary garante agregação O(1) quando o mesmo componente aparece em múltiplos caminhos
+        var acumulado = new Dictionary<int, ExplosaoMaterialDto>();
+        await ExplodirAsync(request.CodigoProduto, request.QuantidadeFabricar, 1, acumulado, ct);
+        return acumulado.Values.ToList().AsReadOnly();
     }
 
     private async Task ExplodirAsync(int codigoProduto, decimal quantidadeAcumulada, int nivel,
-        List<ExplosaoMaterialDto> resultado, CancellationToken ct)
+        Dictionary<int, ExplosaoMaterialDto> acumulado, CancellationToken ct)
     {
         var itens = await bomRepo.ListarItensPorProdutoPaiAsync(codigoProduto, apenasAtivos: true);
 
@@ -25,19 +27,17 @@ public class GetExplosaoMaterialHandler(IBomRepository bomRepo, IProdutoBomRepos
             var quantidadeComPerda = item.QuantidadeLiquida * quantidadeAcumulada;
             var prodFilho = await produtoRepo.ObterComDadosBomAsync(item.CodigoProdutoFilho);
 
-            // Agregar se já existe (mesmo produto em múltiplos caminhos)
-            var existente = resultado.FirstOrDefault(r => r.CodigoProduto == item.CodigoProdutoFilho);
-            if (existente is not null)
+            if (acumulado.TryGetValue(item.CodigoProdutoFilho, out var existente))
             {
-                resultado.Remove(existente);
-                resultado.Add(existente with
+                // Mesmo componente em caminho diferente: acumula a quantidade
+                acumulado[item.CodigoProdutoFilho] = existente with
                 {
                     QuantidadeTotalAcumulada = existente.QuantidadeTotalAcumulada + quantidadeComPerda
-                });
+                };
             }
             else
             {
-                resultado.Add(new ExplosaoMaterialDto(
+                acumulado[item.CodigoProdutoFilho] = new ExplosaoMaterialDto(
                     item.CodigoProdutoFilho,
                     prodFilho?.Nome,
                     prodFilho?.CodigoProdutoLongo,
@@ -47,12 +47,12 @@ public class GetExplosaoMaterialHandler(IBomRepository bomRepo, IProdutoBomRepos
                     quantidadeComPerda,
                     item.PercentualPerda,
                     nivel
-                ));
+                );
             }
 
-            // Recursão para componentes fabricados
-            if (prodFilho?.TipoProduto == "Fabricado")
-                await ExplodirAsync(item.CodigoProdutoFilho, quantidadeComPerda, nivel + 1, resultado, ct);
+            // Recursão apenas para subprodutos fabricados
+            if (prodFilho?.TipoProduto == TiposProduto.Fabricado)
+                await ExplodirAsync(item.CodigoProdutoFilho, quantidadeComPerda, nivel + 1, acumulado, ct);
         }
     }
 }

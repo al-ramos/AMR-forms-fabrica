@@ -23,10 +23,10 @@ public class OrdemProducaoRepository(RdsDbContext context) : IOrdemProducaoRepos
     public async Task AdicionarAsync(OrdemProducao op)
         => await context.OrdensProducao.AddAsync(op);
 
-    public async Task AtualizarAsync(OrdemProducao op)
+    public Task AtualizarAsync(OrdemProducao op)
     {
         context.OrdensProducao.Update(op);
-        await Task.CompletedTask;
+        return Task.CompletedTask;
     }
 
     public async Task<bool> NumeroJaExisteAsync(string numero)

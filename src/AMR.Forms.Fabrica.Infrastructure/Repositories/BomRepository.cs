@@ -11,7 +11,7 @@ public class BomRepository(RdsDbContext context) : IBomRepository
     {
         var query = context.BomItens.Where(b => b.CodigoProdutoPai == codigoProdutoPai);
         if (apenasAtivos) query = query.Where(b => b.Ativo);
-        return await query.OrderBy(b => b.Nivel).ThenBy(b => b.CodigoProdutoFilho).ToListAsync();
+        return await query.OrderBy(b => b.CodigoProdutoFilho).ToListAsync();
     }
 
     public async Task<IEnumerable<BomItem>> ListarArvoreCompletaAsync(int codigoProdutoPai)
@@ -41,10 +41,10 @@ public class BomRepository(RdsDbContext context) : IBomRepository
     public async Task AdicionarAsync(BomItem item)
         => await context.BomItens.AddAsync(item);
 
-    public async Task AtualizarAsync(BomItem item)
+    public Task AtualizarAsync(BomItem item)
     {
         context.BomItens.Update(item);
-        await Task.CompletedTask;
+        return Task.CompletedTask;
     }
 
     public async Task<bool> ExisteReferenciaCircularAsync(int codigoProdutoPai, int codigoProdutoFilho)
@@ -86,13 +86,13 @@ public class ProdutoBomRepository(RdsDbContext context) : ProdutoRepository(cont
 
     public async Task<IEnumerable<Produto>> ListarFabricadosAsync()
         => await _ctx.Produtos
-            .Where(p => p.TipoProduto == "Fabricado")
+            .Where(p => p.TipoProduto == TiposProduto.Fabricado)
             .OrderBy(p => p.Nome)
             .ToListAsync();
 
-    public async Task AtualizarDadosBomAsync(Produto produto)
+    public Task AtualizarDadosBomAsync(Produto produto)
     {
         _ctx.Produtos.Update(produto);
-        await Task.CompletedTask;
+        return Task.CompletedTask;
     }
 }

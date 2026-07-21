@@ -1,6 +1,5 @@
 using AMR.Forms.Fabrica.Application.Features.Bom.DTOs;
 using AMR.Forms.Fabrica.Application.Features.Bom.Queries;
-using AMR.Forms.Fabrica.Domain.Entities;
 using AMR.Forms.Fabrica.Domain.Interfaces;
 using MediatR;
 
@@ -9,14 +8,10 @@ namespace AMR.Forms.Fabrica.Application.Features.Bom.Handlers;
 public class GetBomHandler(IBomRepository bomRepo, IProdutoBomRepository produtoRepo)
     : IRequestHandler<GetBomQuery, BomItemDto?>
 {
+    // Uma única entrada — a recursão já busca o produto do nó filho internamente,
+    // então não duplicamos a chamada a ObterComDadosBomAsync.
     public async Task<BomItemDto?> Handle(GetBomQuery request, CancellationToken ct)
-    {
-        var produto = await produtoRepo.ObterComDadosBomAsync(request.CodigoProduto);
-        if (produto is null) return null;
-
-        var arvore = await ConstruirArvoreAsync(produto.Codigo, 1, ct);
-        return arvore;
-    }
+        => await ConstruirArvoreAsync(request.CodigoProduto, 1, ct);
 
     private async Task<BomItemDto?> ConstruirArvoreAsync(int codigoProduto, int nivel, CancellationToken ct)
     {
@@ -28,16 +23,17 @@ public class GetBomHandler(IBomRepository bomRepo, IProdutoBomRepository produto
 
         foreach (var item in itens)
         {
+            // A recursão já traz os dados do produto filho — reutilizamos do DTO retornado
+            // em vez de chamar ObterComDadosBomAsync novamente para cada filho.
             var filho = await ConstruirArvoreAsync(item.CodigoProdutoFilho, nivel + 1, ct);
-            var prodFilho = await produtoRepo.ObterComDadosBomAsync(item.CodigoProdutoFilho);
 
             componentes.Add(new BomItemDto(
                 item.CodigoProdutoPai,
                 item.CodigoProdutoFilho,
-                prodFilho?.Nome,
-                prodFilho?.CodigoProdutoLongo,
-                prodFilho?.UnidadeMedida,
-                prodFilho?.TipoProduto,
+                filho?.NomeProdutoFilho,
+                filho?.CodigoProdutoLongo,
+                filho?.UnidadeMedida,
+                filho?.TipoProduto,
                 item.Quantidade,
                 item.PercentualPerda,
                 item.QuantidadeLiquida,
