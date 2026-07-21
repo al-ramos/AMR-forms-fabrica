@@ -15,6 +15,18 @@ public class Produto
     public string? CodigoCtf { get; private set; }
     public string? CodigoClf { get; private set; }
 
+    // ── Campos BOM (Sprint 24) ──────────────────────────────────────────
+    /// <summary>Tipo do produto: Fabricado, Comprado ou Fantasma.</summary>
+    public string? TipoProduto { get; private set; }
+    /// <summary>Lead time em dias para aquisição ou produção.</summary>
+    public int LeadTimeDias { get; private set; }
+    /// <summary>Custo padrão unitário (moeda local).</summary>
+    public decimal CustoPadrao { get; private set; }
+
+    // Navegação BOM
+    public ICollection<BomItem> BomComoFabricado { get; private set; } = [];
+    public ICollection<BomItem> BomComoComponente { get; private set; } = [];
+
     protected Produto() { }
 
     public Produto(int codigo, string? nome, string? codigoProdutoLongo, string? codigoEan, string? unidadeMedida)
@@ -27,5 +39,12 @@ public class Produto
         CodigoProdutoLongo = codigoProdutoLongo;
         CodigoEan = codigoEan;
         UnidadeMedida = unidadeMedida;
+    }
+
+    public void AtualizarDadosBom(string? tipoProduto, int leadTimeDias, decimal custoPadrao)
+    {
+        TipoProduto = tipoProduto;
+        LeadTimeDias = leadTimeDias >= 0 ? leadTimeDias : throw new ArgumentException("Lead time não pode ser negativo.");
+        CustoPadrao = custoPadrao >= 0 ? custoPadrao : throw new ArgumentException("Custo padrão não pode ser negativo.");
     }
 }

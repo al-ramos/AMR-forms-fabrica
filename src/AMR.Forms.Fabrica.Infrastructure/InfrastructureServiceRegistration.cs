@@ -33,6 +33,8 @@ public static class InfrastructureServiceRegistration
         services.AddScoped<IDepartamentoRepository, DepartamentoRepository>();
         services.AddScoped<IBusinessUnitRepository, BusinessUnitRepository>();
         services.AddScoped<INotaFiscalDetalheRepository, NotaFiscalDetalheRepository>();
+        services.AddScoped<IBomRepository, BomRepository>();
+        services.AddScoped<IProdutoBomRepository, ProdutoBomRepository>();
 
         return services;
     }

@@ -93,3 +93,20 @@ public interface IBusinessUnitRepository
     Task<BusinessUnit?> ObterPorCodigoAsync(string codigo);
     Task<IEnumerable<BusinessUnit>> ListarPorFilialAsync(int codigoFilial);
 }
+
+public interface IBomRepository
+{
+    Task<IEnumerable<BomItem>> ListarItensPorProdutoPaiAsync(int codigoProdutoPai, bool apenasAtivos = true);
+    Task<IEnumerable<BomItem>> ListarArvoreCompletaAsync(int codigoProdutoPai);
+    Task<BomItem?> ObterItemAsync(int codigoProdutoPai, int codigoProdutoFilho);
+    Task AdicionarAsync(BomItem item);
+    Task AtualizarAsync(BomItem item);
+    Task<bool> ExisteReferenciaCircularAsync(int codigoProdutoPai, int codigoProdutoFilho);
+}
+
+public interface IProdutoBomRepository : IProdutoRepository
+{
+    Task<Produto?> ObterComDadosBomAsync(int codigo);
+    Task<IEnumerable<Produto>> ListarFabricadosAsync();
+    Task AtualizarDadosBomAsync(Produto produto);
+}

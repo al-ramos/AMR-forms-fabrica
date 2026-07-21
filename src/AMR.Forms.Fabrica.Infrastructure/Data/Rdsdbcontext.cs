@@ -25,6 +25,7 @@ public class RdsDbContext(DbContextOptions<RdsDbContext> options) : DbContext(op
     public DbSet<PedidoItem> PedidoItens => Set<PedidoItem>();
     public DbSet<LogSistema> LogsSistema => Set<LogSistema>();
     public DbSet<Departamento> Departamentos => Set<Departamento>();
+    public DbSet<BomItem> BomItens => Set<BomItem>();
 
     public async Task<int> CommitAsync(CancellationToken ct = default)
         => await SaveChangesAsync(ct);
@@ -133,6 +134,31 @@ public class RdsDbContext(DbContextOptions<RdsDbContext> options) : DbContext(op
             e.Property(x => x.CodigoEan).HasColumnName("CD_EAN").HasMaxLength(30);
             e.Property(x => x.UnidadeMedidaComercial).HasColumnName("CD_UMC").HasMaxLength(10);
             e.Property(x => x.UnidadeMedida).HasColumnName("CD_UM").HasMaxLength(10);
+            // Campos BOM (Sprint 24)
+            e.Property(x => x.TipoProduto).HasColumnName("CD_TIPO_PRODUTO").HasMaxLength(20);
+            e.Property(x => x.LeadTimeDias).HasColumnName("NR_LEAD_TIME_DIAS").HasDefaultValue(0);
+            e.Property(x => x.CustoPadrao).HasColumnName("VL_CUSTO_PADRAO").HasPrecision(18, 4).HasDefaultValue(0m);
+            // Relacionamentos BOM
+            e.HasMany(p => p.BomComoFabricado).WithOne(b => b.ProdutoPai).HasForeignKey(b => b.CodigoProdutoPai);
+            e.HasMany(p => p.BomComoComponente).WithOne(b => b.ProdutoFilho).HasForeignKey(b => b.CodigoProdutoFilho);
+        });
+
+        // ── BOM_ITEM ──────────────────────────────────────────────────────────
+        mb.Entity<BomItem>(e =>
+        {
+            e.ToTable("BOM_ITEM");
+            e.HasKey(x => x.Id);
+            e.Property(x => x.Id).HasColumnName("ID_BOM_ITEM").ValueGeneratedOnAdd();
+            e.Property(x => x.CodigoProdutoPai).HasColumnName("CD_PRODUTO_PAI");
+            e.Property(x => x.CodigoProdutoFilho).HasColumnName("CD_PRODUTO_FILHO");
+            e.Property(x => x.Quantidade).HasColumnName("QT_QUANTIDADE").HasPrecision(18, 6);
+            e.Property(x => x.Nivel).HasColumnName("NR_NIVEL");
+            e.Property(x => x.PercentualPerda).HasColumnName("PC_PERDA").HasPrecision(5, 2).HasDefaultValue(0m);
+            e.Property(x => x.Ativo).HasColumnName("FL_ATIVO").HasDefaultValue(true);
+            e.Property(x => x.CriadoEm).HasColumnName("DT_CRIADO_EM");
+            e.Property(x => x.AtualizadoEm).HasColumnName("DT_ATUALIZADO_EM");
+            e.Ignore(x => x.QuantidadeLiquida);
+            e.HasIndex(x => new { x.CodigoProdutoPai, x.CodigoProdutoFilho }).IsUnique();
         });
 
         // ── FICHA ─────────────────────────────────────────────────────────────
