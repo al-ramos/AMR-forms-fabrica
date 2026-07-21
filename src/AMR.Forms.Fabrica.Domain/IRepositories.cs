@@ -128,6 +128,24 @@ public interface IRastreabilidadeRepository
     Task AdicionarAsync(RastreabilidadeItem item);
 }
 
+public interface IPlanoManutencaoRepository
+{
+    Task<PlanoManutencao?> ObterPorIdAsync(int id);
+    Task<IEnumerable<PlanoManutencao>> ListarPorEquipamentoAsync(int equipamentoId, bool apenasAtivos = true);
+    Task<IEnumerable<PlanoManutencao>> ListarVencidosOuProximosAsync(int codigoFilial, int diasAntecedencia = 7);
+    Task AdicionarAsync(PlanoManutencao plano);
+    Task AtualizarAsync(PlanoManutencao plano);
+}
+
+public interface IOrdemManutencaoRepository
+{
+    Task<OrdemManutencao?> ObterPorIdAsync(int id);
+    Task<IEnumerable<OrdemManutencao>> ListarPorFilialAsync(int codigoFilial, StatusOrdemManutencao? status = null);
+    Task<IEnumerable<OrdemManutencao>> ListarPorEquipamentoAsync(int equipamentoId, StatusOrdemManutencao? status = null);
+    Task AdicionarAsync(OrdemManutencao ordem);
+    Task AtualizarAsync(OrdemManutencao ordem);
+}
+
 public interface IEquipamentoRepository
 {
     Task<Equipamento?> ObterPorIdAsync(int id);

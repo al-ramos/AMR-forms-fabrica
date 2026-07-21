@@ -30,6 +30,8 @@ public class RdsDbContext(DbContextOptions<RdsDbContext> options) : DbContext(op
     public DbSet<RastreabilidadeItem> RastreabilidadeItens => Set<RastreabilidadeItem>();
     public DbSet<Equipamento> Equipamentos => Set<Equipamento>();
     public DbSet<RegistroOee> RegistrosOee => Set<RegistroOee>();
+    public DbSet<PlanoManutencao> PlanosManutencao => Set<PlanoManutencao>();
+    public DbSet<OrdemManutencao> OrdensManutencao => Set<OrdemManutencao>();
 
     public async Task<int> CommitAsync(CancellationToken ct = default)
         => await SaveChangesAsync(ct);
@@ -376,6 +378,52 @@ public class RdsDbContext(DbContextOptions<RdsDbContext> options) : DbContext(op
             e.Ignore(x => x.Oee);
             e.HasIndex(x => new { x.EquipamentoId, x.DataHoraInicio });
             e.HasIndex(x => x.CodigoFilial);
+        });
+
+        // ── PLANO_MANUTENCAO ──────────────────────────────────────────────────
+        mb.Entity<PlanoManutencao>(e =>
+        {
+            e.ToTable("PLANO_MANUTENCAO");
+            e.HasKey(x => x.Id);
+            e.Property(x => x.Id).HasColumnName("ID_PLANO_MANUTENCAO").ValueGeneratedOnAdd();
+            e.Property(x => x.EquipamentoId).HasColumnName("ID_EQUIPAMENTO");
+            e.Property(x => x.CodigoFilial).HasColumnName("CD_FILIAL");
+            e.Property(x => x.TipoManutencao).HasColumnName("CD_TIPO_MANUTENCAO").HasConversion<string>().HasMaxLength(20);
+            e.Property(x => x.Descricao).HasColumnName("DS_DESCRICAO").HasMaxLength(200);
+            e.Property(x => x.Instrucoes).HasColumnName("DS_INSTRUCOES").HasMaxLength(2000);
+            e.Property(x => x.FrequenciaDias).HasColumnName("NR_FREQUENCIA_DIAS");
+            e.Property(x => x.DuracaoEstimadaHoras).HasColumnName("NR_DURACAO_EST_HORAS").HasPrecision(8, 2);
+            e.Property(x => x.ProximaExecucao).HasColumnName("DT_PROXIMA_EXECUCAO");
+            e.Property(x => x.UltimaExecucao).HasColumnName("DT_ULTIMA_EXECUCAO");
+            e.Property(x => x.Ativo).HasColumnName("FL_ATIVO").HasDefaultValue(true);
+            e.Property(x => x.CriadoEm).HasColumnName("DT_CRIADO_EM");
+            e.HasMany(p => p.OrdensManutencao).WithOne(o => o.PlanoManutencao).HasForeignKey(o => o.PlanoManutencaoId);
+            e.HasIndex(x => new { x.CodigoFilial, x.ProximaExecucao });
+        });
+
+        // ── ORDEM_MANUTENCAO ──────────────────────────────────────────────────
+        mb.Entity<OrdemManutencao>(e =>
+        {
+            e.ToTable("ORDEM_MANUTENCAO");
+            e.HasKey(x => x.Id);
+            e.Property(x => x.Id).HasColumnName("ID_ORDEM_MANUTENCAO").ValueGeneratedOnAdd();
+            e.Property(x => x.PlanoManutencaoId).HasColumnName("ID_PLANO_MANUTENCAO");
+            e.Property(x => x.EquipamentoId).HasColumnName("ID_EQUIPAMENTO");
+            e.Property(x => x.CodigoFilial).HasColumnName("CD_FILIAL");
+            e.Property(x => x.TipoManutencao).HasColumnName("CD_TIPO_MANUTENCAO").HasConversion<string>().HasMaxLength(20);
+            e.Property(x => x.Descricao).HasColumnName("DS_DESCRICAO").HasMaxLength(200);
+            e.Property(x => x.Status).HasColumnName("CD_STATUS").HasConversion<string>().HasMaxLength(20);
+            e.Property(x => x.DataPrevista).HasColumnName("DT_PREVISTA");
+            e.Property(x => x.DataInicio).HasColumnName("DT_INICIO");
+            e.Property(x => x.DataConclusao).HasColumnName("DT_CONCLUSAO");
+            e.Property(x => x.DuracaoRealHoras).HasColumnName("NR_DURACAO_REAL_HORAS").HasPrecision(8, 2);
+            e.Property(x => x.CodigoTecnico).HasColumnName("CD_TECNICO").HasMaxLength(20);
+            e.Property(x => x.Observacao).HasColumnName("DS_OBSERVACAO").HasMaxLength(500);
+            e.Property(x => x.MotivoCancelamento).HasColumnName("DS_MOTIVO_CANCELAMENTO").HasMaxLength(500);
+            e.Property(x => x.CriadoEm).HasColumnName("DT_CRIADO_EM");
+            e.Ignore(x => x.AtrasoEmDias);
+            e.HasIndex(x => new { x.CodigoFilial, x.Status });
+            e.HasIndex(x => x.EquipamentoId);
         });
 
         // ── NOTA_FISCAL_DETALHE ───────────────────────────────────────────────
