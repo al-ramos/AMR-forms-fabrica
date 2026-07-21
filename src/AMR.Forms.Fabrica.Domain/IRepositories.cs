@@ -127,3 +127,19 @@ public interface IRastreabilidadeRepository
     Task<IEnumerable<RastreabilidadeItem>> ListarPorLoteAsync(string lote);
     Task AdicionarAsync(RastreabilidadeItem item);
 }
+
+public interface IEquipamentoRepository
+{
+    Task<Equipamento?> ObterPorIdAsync(int id);
+    Task<IEnumerable<Equipamento>> ListarPorFilialAsync(int codigoFilial, bool apenasAtivos = true);
+    Task AdicionarAsync(Equipamento equipamento);
+    Task AtualizarAsync(Equipamento equipamento);
+}
+
+public interface IRegistroOeeRepository
+{
+    Task<RegistroOee?> ObterPorIdAsync(int id);
+    Task<IEnumerable<RegistroOee>> ListarPorEquipamentoAsync(int equipamentoId, DateTime? inicio = null, DateTime? fim = null);
+    Task<IEnumerable<RegistroOee>> ListarPorFilialAsync(int codigoFilial, DateTime dataInicio, DateTime dataFim);
+    Task AdicionarAsync(RegistroOee registro);
+}

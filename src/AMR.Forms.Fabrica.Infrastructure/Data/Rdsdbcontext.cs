@@ -28,6 +28,8 @@ public class RdsDbContext(DbContextOptions<RdsDbContext> options) : DbContext(op
     public DbSet<BomItem> BomItens => Set<BomItem>();
     public DbSet<OrdemProducao> OrdensProducao => Set<OrdemProducao>();
     public DbSet<RastreabilidadeItem> RastreabilidadeItens => Set<RastreabilidadeItem>();
+    public DbSet<Equipamento> Equipamentos => Set<Equipamento>();
+    public DbSet<RegistroOee> RegistrosOee => Set<RegistroOee>();
 
     public async Task<int> CommitAsync(CancellationToken ct = default)
         => await SaveChangesAsync(ct);
@@ -332,6 +334,48 @@ public class RdsDbContext(DbContextOptions<RdsDbContext> options) : DbContext(op
             e.Property(x => x.Codigo).HasColumnName("CD_DEPARTAMENTO");
             e.Property(x => x.CodigoFilial).HasColumnName("CD_FILIAL");
             e.Property(x => x.DescricaoProduto).HasColumnName("NO_DEPARTAMENTO").HasMaxLength(100);
+        });
+
+        // ── EQUIPAMENTO ───────────────────────────────────────────────────────
+        mb.Entity<Equipamento>(e =>
+        {
+            e.ToTable("EQUIPAMENTO");
+            e.HasKey(x => x.Id);
+            e.Property(x => x.Id).HasColumnName("ID_EQUIPAMENTO").ValueGeneratedOnAdd();
+            e.Property(x => x.CodigoFilial).HasColumnName("CD_FILIAL");
+            e.Property(x => x.Nome).HasColumnName("NO_EQUIPAMENTO").HasMaxLength(100);
+            e.Property(x => x.Descricao).HasColumnName("DS_EQUIPAMENTO").HasMaxLength(300);
+            e.Property(x => x.CodigoArea).HasColumnName("CD_AREA").HasMaxLength(50);
+            e.Property(x => x.Ativo).HasColumnName("FL_ATIVO").HasDefaultValue(true);
+            e.Property(x => x.CriadoEm).HasColumnName("DT_CRIADO_EM");
+            e.HasMany(eq => eq.RegistrosOee).WithOne(r => r.Equipamento).HasForeignKey(r => r.EquipamentoId);
+        });
+
+        // ── REGISTRO_OEE ──────────────────────────────────────────────────────
+        mb.Entity<RegistroOee>(e =>
+        {
+            e.ToTable("REGISTRO_OEE");
+            e.HasKey(x => x.Id);
+            e.Property(x => x.Id).HasColumnName("ID_REGISTRO_OEE").ValueGeneratedOnAdd();
+            e.Property(x => x.EquipamentoId).HasColumnName("ID_EQUIPAMENTO");
+            e.Property(x => x.CodigoFilial).HasColumnName("CD_FILIAL");
+            e.Property(x => x.DataHoraInicio).HasColumnName("DT_HORA_INICIO");
+            e.Property(x => x.DataHoraFim).HasColumnName("DT_HORA_FIM");
+            e.Property(x => x.TempoPlanejadoMinutos).HasColumnName("NR_TEMPO_PLANEJADO_MIN");
+            e.Property(x => x.TempoRealProducaoMinutos).HasColumnName("NR_TEMPO_REAL_MIN");
+            e.Property(x => x.QuantidadeProduzida).HasColumnName("QT_PRODUZIDA").HasPrecision(18, 4);
+            e.Property(x => x.QuantidadeAprovada).HasColumnName("QT_APROVADA").HasPrecision(18, 4);
+            e.Property(x => x.TempoCicloIdealSegundos).HasColumnName("NR_CICLO_IDEAL_SEG").HasPrecision(10, 3);
+            e.Property(x => x.CodigoOperador).HasColumnName("CD_OPERADOR").HasMaxLength(20);
+            e.Property(x => x.Observacao).HasColumnName("DS_OBSERVACAO").HasMaxLength(300);
+            e.Property(x => x.CriadoEm).HasColumnName("DT_CRIADO_EM");
+            // Computed props: ignoradas pelo EF (calculadas na entidade)
+            e.Ignore(x => x.Disponibilidade);
+            e.Ignore(x => x.Performance);
+            e.Ignore(x => x.Qualidade);
+            e.Ignore(x => x.Oee);
+            e.HasIndex(x => new { x.EquipamentoId, x.DataHoraInicio });
+            e.HasIndex(x => x.CodigoFilial);
         });
 
         // ── NOTA_FISCAL_DETALHE ───────────────────────────────────────────────
